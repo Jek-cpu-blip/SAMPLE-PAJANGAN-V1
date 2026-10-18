@@ -34,9 +34,29 @@ th{color:var(--mu);font-weight:600;background:var(--bg);position:sticky;top:0}td
 .k{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px 12px}.k b{font-size:22px;display:block}.k span{font-size:12px;color:var(--mu)}
 .mu{color:var(--mu);font-size:13px}.x{color:var(--er);cursor:pointer;background:none;border:0;font:inherit}
 .msg{font-size:13px;margin-top:8px}
+
+@media(max-width:700px){
+body{font-size:16px;padding-bottom:76px}header{padding:10px 14px 0}h1{font-size:17px}
+nav{position:fixed;bottom:0;left:0;right:0;margin:0;max-width:none;padding:0 0 env(safe-area-inset-bottom,0px);background:var(--card);border-top:1px solid var(--bd);border-bottom:0;z-index:20}
+nav button{flex:1;padding:12px 2px;font-size:13px;border-bottom:0;border-top:3px solid transparent}nav button.on{border-top-color:var(--pr)}
+main{padding:12px 12px 24px}input,select{font-size:16px;padding:12px}button.b{padding:12px 14px}
+.row:has(#q){flex-wrap:wrap}.row:has(#q) #q{flex:1 1 100%}.row:has(#q) select{flex:1}
+.chips{flex-wrap:nowrap;overflow-x:auto;margin:0 -12px 10px;padding:0 12px 4px}.chip{white-space:nowrap;padding:8px 13px}
+.cards{grid-template-columns:1fr 1fr}.k b{font-size:24px}
+.tw{border:0;background:none;overflow:visible}
+table,tbody{display:block;min-width:0;width:100%}thead{display:none}
+tr{display:grid;grid-template-columns:1fr 1fr;gap:3px 12px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:10px}
+td{display:block;border:0;padding:2px 0;grid-column:1/-1;text-align:left!important}
+#mb td:nth-child(5),#mb td:nth-child(6),#recent td:nth-child(4),#recent td:nth-child(5){grid-column:auto}
+#mb td:nth-child(2){font-weight:600}
+#mb td:nth-child(4)::before{content:'Lokasi sample'}#mb td:nth-child(5)::before{content:'Stok toko'}#mb td:nth-child(6)::before{content:'Stok DC'}#mb td:nth-child(7)::before{content:'Production No (DC)'}
+#recent td:nth-child(3)::before{content:'Lokasi'}
+#mb td:nth-child(n+4):nth-child(-n+7)::before,#recent td:nth-child(3)::before{display:block;font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.03em}
+.x{padding:8px 0;font-size:14px}#reader{max-width:none}
+}
 </style></head><body>
-<header><h1>Monitoring Sample Pajangan Keramik &amp; Granit</h1><div class="sub" id="meta"></div><div class="sub" id="sync"></div></header>
-<nav id="nav"><button data-t="in" class="on">1. Input Sample</button><button data-t="mon">2. Monitoring</button><button data-t="dat">3. Data Stok</button></nav>
+<header><h1>Monitoring Sample Pajangan Keramik &amp; Granit</h1><div class="sub" id="meta"></div><div class="sub"><span id="sync"></span> <button class="chip" id="refresh" style="padding:3px 10px;margin-left:6px">⟳ Segarkan</button></div></header>
+<nav id="nav"><button data-t="in" class="on">➕ Input Sample</button><button data-t="mon">📊 Monitoring</button><button data-t="dat">📦 Data Stok</button></nav>
 <main>
 <section class="tab on" id="in">
  <div class="card"><b>Tambah / ubah sample</b>
@@ -59,12 +79,12 @@ th{color:var(--mu);font-weight:600;background:var(--bg);position:sticky;top:0}td
  <label>Stock Warehouse by Location (SCALE) — stok DC</label><input type="file" id="fw" accept=".xlsx,.xls">
  <label>Inventory Movement — stok toko (Ending Balance)</label><input type="file" id="fm" accept=".xlsx,.xls">
  <div class="row" style="margin-top:10px"><button class="b p" id="proc">Proses &amp; simpan</button><button class="b" id="rst">Kembali ke data bawaan</button></div><div id="dmsg" class="msg"></div></div>
- <div class="card mu"><b style="color:var(--tx)">Aturan status</b><br>Stok toko = Ending Balance Qty. Stok DC = Available Qty (status Available) dari DC Cipeucang, Cikupa, dan Balongbendo, dihitung per production no (digabung dari 3 DC).<br>• <b>Aman</b>: ada sample, stok toko ≥10<br>• <b>Request stock</b>: ada sample, stok toko &lt;10, dan di DC ada minimal 1 production no dengan stok ≥100<br>• <b>Take out</b>: ada sample, stok toko &lt;10 (atau habis) dan di DC tidak ada production no ≥100 (termasuk DC kosong)<br>• <b>Item berawalan DI/, F/, STP, TE/</b>: stok DC diabaikan, sample di-take out saat stok toko &lt;10<br>• <b>Stok ada, belum ada sample</b>: item belum di-input sample dan layak dipajang (stok toko ≥10, atau toko &lt;10 tetapi DC punya production no ≥100)<br>• <b>Tidak ada di data</b>: kode tidak ditemukan pada laporan.</div>
+ <div class="card mu"><b style="color:var(--tx)">Aturan status</b><br>Stok toko = Ending Balance Qty. Stok DC = Available Qty (status Available) dari DC Cipeucang, Cikupa, dan Balongbendo, dihitung per production no (digabung dari 3 DC).<br>• <b>Aman</b>: ada sample, stok toko ≥10<br>• <b>Request stock</b>: ada sample, stok toko &lt;10, dan di DC ada minimal 1 production no dengan stok ≥100<br>• <b>Take out</b>: ada sample, stok toko &lt;10 (atau habis) dan di DC tidak ada production no ≥100 (termasuk DC kosong)<br>• <b>Item berawalan DI/, F/, STP, TE/</b>: stok DC diabaikan, sample di-take out saat stok toko &lt;10<br>• <b>Stok ada, belum ada sample</b>: item belum di-input sample dan layak dipajang (stok toko ≥10, atau toko &lt;10 tetapi DC punya production no ≥100)<br>• <b>Tidak dianjurkan sample</b>: item belum ada sample dan tidak memenuhi syarat dipajang (stok toko dan DC sama-sama 0, stok toko &lt;10 dan tidak ada production no DC ≥100, atau item DI/F/STP/TE dengan stok toko &lt;10). Semua item tetap ditampilkan agar bisa dicari.<br>• <b>Tidak ada di data</b>: kode tidak ditemukan pada laporan.</div>
 </section>
 </main>
 <script>
 const $=s=>document.querySelector(s),LS=(k,v)=>{try{if(v===undefined){const x=localStorage.getItem(k);return x?JSON.parse(x):null}localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}};
-let DATA={store:'',date:'',items:[]},SM=[],idx={},filt='ALL',PIN=LS('pin')||'';
+let DATA={store:'',date:'',items:[]},SM=[],idx={},filt='ALL',LIM=200,PIN=LS('pin')||'';
 const setSync=(ok,t)=>{const e=$('#sync');e.textContent=ok?'● Tersinkron dengan server':'○ '+(t||'Offline');e.style.color=ok?'var(--ok)':'var(--er)'};
 async function api(path,body,retry=1){const r=await fetch('/api/'+path,{method:body?'POST':'GET',headers:{'content-type':'application/json','x-pin':PIN},body:body?JSON.stringify(body):undefined});
  if(r.status===401&&retry){const p=prompt('PIN edit diperlukan untuk menyimpan perubahan:');if(p){PIN=p;LS('pin',p);return api(path,body,0)}}
@@ -73,36 +93,36 @@ async function op(o){try{const r=await api('samples',o);SM=r.samples;LS('smp',SM
 async function loadSamples(){try{SM=(await api('samples')).samples;LS('smp',SM);setSync(true)}catch(e){SM=LS('smp')||[];setSync(false,'Offline (menampilkan data lokal)')}render()}
 async function loadStock(){let d=null;try{d=await api('stock')}catch(e){}if(!d||!d.items)d=await (await fetch('/data/stock.json')).json();DATA=d;index();render()}
 const dcSum=d=>Object.values(d||{}).reduce((a,b)=>a+b,0),fmt=n=>(Math.round(n*100)/100).toLocaleString('id-ID');
-function index(){idx={};DATA.items.forEach(i=>{idx[i.c]=i;if(i.b)idx[i.b]=i});$('#meta').textContent=`${DATA.store} · data per ${DATA.date} · ${DATA.items.length} item keramik/granit`}
+function index(){idx={};DATA.items.forEach(i=>{idx[i.c]=i;if(i.b)idx[i.b]=i});$('#meta').textContent=`${DATA.store} · data per ${DATA.date}${DATA.updatedAt?' (diunggah '+new Date(DATA.updatedAt).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})+')':''} · ${DATA.items.length} item`}
 const find=v=>idx[(v||'').trim()];
-const ST={AMAN:['Aman','ok'],REFILL:['Request stock','wn'],TAKEOUT:['Take out (stok toko habis)','er'],LOW:['Take out (stok toko <10)','er'],NOSMP:['Stok ada, belum ada sample','in'],UNK:['Tidak ada di data','gr']};
+const ST={AMAN:['Aman','ok'],REFILL:['Request stock','wn'],TAKEOUT:['Take out (stok toko habis)','er'],LOW:['Take out (stok toko <10)','er'],NOSMP:['Stok ada, belum ada sample','in'],NOREC:['Tidak dianjurkan sample','gr'],UNK:['Tidak ada di data','gr']};
 const THR=10,LOT=100,PRE=['DI/','F/','STP','TE/'];
 const tokoOnly=i=>PRE.some(p=>(i.n||'').trim().toUpperCase().startsWith(p));
 const dcMax=i=>{const m={};((i.p&&i.p.length)?i.p:Object.entries(i.d||{}).map(([k,v])=>[k,'',v])).forEach(x=>m[x[1]]=(m[x[1]]||0)+x[2]);return Math.max(0,...Object.values(m))};
-const hint=i=>{if(!i.c)return'';if(tokoOnly(i))return'Item DI/F/STP/TE: hanya stok toko';if(i.t<THR&&dcSum(i.d)>0){const m=dcMax(i);return m>=LOT?'DC: lot terbesar '+fmt(m)+' (≥100)':'DC: lot terbesar '+fmt(m)+' (<100)'}return''};
+const hint=i=>{if(!i.c)return'';const lt=i.t<THR;if(tokoOnly(i))return lt?'Stok toko <10 · item DI/F/STP/TE (DC diabaikan)':'Item DI/F/STP/TE: hanya stok toko';if(lt){const m=dcMax(i);return dcSum(i.d)>0?'Stok toko <10 · DC: lot terbesar '+fmt(m)+(m>=LOT?' (≥100)':' (<100)'):'Stok toko <10 · DC kosong'}return''};
 const recSmp=i=>i.t>=THR||(!tokoOnly(i)&&dcMax(i)>=LOT);
 function stat(s){const i=idx[s.c];if(!i)return'UNK';if(i.t>=THR)return'AMAN';if(!tokoOnly(i)&&dcMax(i)>=LOT)return'REFILL';return i.t>0?'LOW':'TAKEOUT'}
 function rows(){const r=SM.map(s=>{const i=idx[s.c]||{};return{k:stat(s),c:s.c,b:i.b||'',n:i.n||'(tidak ditemukan)',s:i.s||'',locs:s.locs,t:i.t??'',d:i.d?dcSum(i.d):'',dd:i.d,pp:i.p||[],h:hint(i),smp:1}});
  const have=new Set(SM.map(s=>idx[s.c]?.c||s.c));
- DATA.items.forEach(i=>{if(!have.has(i.c)&&recSmp(i))r.push({k:'NOSMP',c:i.c,b:i.b,n:i.n,s:i.s,locs:[],t:i.t,d:dcSum(i.d),dd:i.d,pp:i.p||[],h:hint(i)})});return r}
+ DATA.items.forEach(i=>{if(!have.has(i.c))r.push({k:recSmp(i)?'NOSMP':'NOREC',c:i.c,b:i.b,n:i.n,s:i.s,locs:[],t:i.t,d:dcSum(i.d),dd:i.d,pp:i.p||[],h:hint(i)})});return r}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const sn=s=>s.replace(/^DC\s*/i,'');
 const prodHtml=p=>p.length?p.map(x=>`${sn(x[0])}: <b>${x[1]||'(kosong)'}</b> · ${fmt(x[2])}`).join('<br>'):'–';
 function render(){const all=rows(),sub=$('#sub').value,q=$('#q').value.toLowerCase();let base=all.filter(r=>!sub||r.s===sub||r.k==='UNK');
  const cnt={ALL:base.length};Object.keys(ST).forEach(k=>cnt[k]=base.filter(r=>r.k===k).length);
- const smpN=SM.length;$('#kpi').innerHTML=`<div class="k"><b>${smpN}</b><span>Total sample diinput</span></div>`+['AMAN','REFILL','TAKEOUT','LOW','NOSMP'].map(k=>`<div class="k"><b>${cnt[k]}</b><span>${ST[k][0]}</span></div>`).join('');
+ const smpN=SM.length;$('#kpi').innerHTML=`<div class="k"><b>${smpN}</b><span>Total sample diinput</span></div>`+['AMAN','REFILL','TAKEOUT','LOW','NOSMP','NOREC'].map(k=>`<div class="k" data-f="${k}" style="cursor:pointer;border-left:4px solid var(--${ST[k][1]})"><b>${cnt[k]}</b><span>${ST[k][0]}</span></div>`).join('');
  $('#chips').innerHTML=[['ALL','Semua']].concat(Object.entries(ST).map(([k,v])=>[k,v[0]])).map(([k,l])=>`<button class="chip ${filt===k?'on':''}" data-f="${k}">${l} (${cnt[k]})</button>`).join('')+`<button class="chip ${filt==='SMP'?'on':''}" data-f="SMP">Ada sample (${base.filter(r=>r.smp).length})</button>`;
  let v=base.filter(r=>filt==='ALL'||(filt==='SMP'?r.smp:r.k===filt));
  if(q)v=v.filter(r=>(r.c+r.b+r.n+r.locs.join(' ')+r.pp.map(x=>x[1]).join('')).toLowerCase().includes(q));
- const ord={TAKEOUT:0,LOW:0,REFILL:1,UNK:2,NOSMP:3,AMAN:4};v.sort((a,b)=>ord[a.k]-ord[b.k]);
- $('#cnt').textContent=`${v.length} baris`+(v.length>500?' (500 teratas ditampilkan)':'');window._v=v;
- $('#mb').innerHTML=v.slice(0,500).map(r=>`<tr><td><span class="tag ${ST[r.k][1]}">${ST[r.k][0]}</span>${r.h?'<div class="mu">'+r.h+'</div>':''}</td><td>${r.c}<div class="mu">${r.b}</div></td><td>${r.n}</td><td>${r.locs.length?r.locs.map(l=>'<div>📍 '+esc(l)+'</div>').join(''):'<span class=mu>—</span>'}</td><td class="n">${r.t===''?'–':fmt(r.t)}</td><td class="n" title="${Object.entries(r.dd||{}).map(e=>e.join(': ')).join(', ')}">${r.d===''?'–':fmt(r.d)}</td><td class="mu">${prodHtml(r.pp)}</td><td>${r.smp?`<button class="x" data-del="${r.c}">Hapus sample</button>`:`<button class="x" style="color:var(--pr)" data-add="${r.c}">+ Sample</button>`}</td></tr>`).join('');
+ const ord={TAKEOUT:0,LOW:0,REFILL:1,UNK:2,NOSMP:3,AMAN:4,NOREC:5};v.sort((a,b)=>ord[a.k]-ord[b.k]);
+ $('#cnt').innerHTML=`${v.length} baris`+(v.length>LIM?` · menampilkan ${LIM} · <button class="chip" id="more">Tampilkan ${Math.min(200,v.length-LIM)} lagi</button>`:'');window._v=v;
+ $('#mb').innerHTML=v.slice(0,LIM).map(r=>`<tr><td><span class="tag ${ST[r.k][1]}">${ST[r.k][0]}</span>${r.h?'<div class="mu">'+r.h+'</div>':''}</td><td>${r.c}<div class="mu">${r.b}</div></td><td>${r.n}</td><td>${r.locs.length?r.locs.map(l=>'<div>📍 '+esc(l)+'</div>').join(''):'<span class=mu>—</span>'}</td><td class="n">${r.t===''?'–':fmt(r.t)}</td><td class="n" title="${Object.entries(r.dd||{}).map(e=>e.join(': ')).join(', ')}">${r.d===''?'–':fmt(r.d)}</td><td class="mu">${prodHtml(r.pp)}</td><td>${r.smp?`<button class="x" data-del="${r.c}">Hapus sample</button>`:`<button class="x" style="color:var(--pr)" data-add="${r.c}">+ Sample</button>`}</td></tr>`).join('');
  const rc=SM.slice(-8).reverse();$('#recent').innerHTML=rc.map(s=>`<tr><td>${s.c}</td><td>${idx[s.c]?.n||'—'}</td><td>${s.locs.map((l,k)=>`<div>${esc(l)} <button class="x" data-dl="${s.c}|${k}">×</button></div>`).join('')}</td><td>${s.at||''}</td><td><button class="x" data-del="${s.c}">Hapus</button></td></tr>`).join('')||'<tr><td colspan=5 class="mu">Belum ada sample.</td></tr>';
  }
 function show(t){document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('on',e.id===t));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t!=='in')stopScan()}
 $('#nav').onclick=e=>e.target.dataset.t&&show(e.target.dataset.t);
-$('#chips').onclick=e=>{if(e.target.dataset.f){filt=e.target.dataset.f;render()}};
-$('#q').oninput=$('#sub').onchange=render;
+$('#chips').onclick=e=>{if(e.target.dataset.f){filt=e.target.dataset.f;LIM=200;render()}};
+$('#q').oninput=$('#sub').onchange=()=>{LIM=200;render()};$('#cnt').onclick=e=>{if(e.target.id==='more'){LIM+=200;render()}};
 $('#mb').onclick=$('#recent').onclick=e=>{const d=e.target.dataset;if(d.del){const b=e.target;if(b.dataset.arm){op({op:'del',c:d.del})}else{b.dataset.arm=1;b.dataset.o=b.textContent;b.textContent='Yakin? Klik lagi';b.style.fontWeight='700';setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent=b.dataset.o;b.style.fontWeight=''}},3000)}}if(d.dl){const[c,k]=d.dl.split('|'),s=SM.find(x=>x.c===c);if(s)op({op:'delLoc',c,loc:s.locs[+k]})}if(d.add){show('in');$('#code').value=d.add;prev();focusLoc()}};
 function prev(){const i=find($('#code').value),m=$('#match');m.hidden=!$('#code').value.trim();if(!m.hidden)m.innerHTML=i?`<b>${i.n}</b><br>${i.c}${i.b?' · '+i.b:''} · Toko: ${fmt(i.t)} · DC: ${fmt(dcSum(i.d))}${(i.p||[]).length?'<br>Prod No: '+i.p.map(x=>sn(x[0])+' '+(x[1]||'-')+' ('+fmt(x[2])+')').join(', '):''}`:'Kode tidak ada di data stok (tetap bisa disimpan).'}
 $('#code').oninput=prev;
@@ -129,7 +149,7 @@ $('#proc').onclick=async()=>{const m=$('#dmsg');try{const fw=$('#fw').files[0],f
  m.textContent='Memproses…';const mv=tbl(await rd(fm),'No Item');let store=DATA.store;const hl=mv.head.flat().join(' ').match(/Location\s*:\s*\d+\s*-\s*([^,]+)/);if(hl)store=hl[1].trim();
  const dc={},bc={},pn={},OK=['DC CIPEUCANG','DC CIKUPA','DC BALONGBENDO'];if(fw){tbl(await rd(fw),'Item No').rows.forEach(r=>{const c=String(r['Item No']||'').trim();if(!c)return;bc[c]=String(r['Barcode No']||'');const sn2=String(r['Site Name']||'').trim(),q=+r['Available Qty']||0;if(r['Inventory Status']==='Available'&&q>0&&OK.includes(sn2.toUpperCase())){(dc[c]=dc[c]||{})[sn2]=((dc[c]||{})[sn2]||0)+q;const pr=String(r['Production No']||'').trim(),k=sn2+'|'+pr;(pn[c]=pn[c]||{})[k]=(pn[c][k]||0)+q}})}else DATA.items.forEach(i=>{dc[i.c]=i.d;bc[i.c]=i.b;pn[i.c]=Object.fromEntries((i.p||[]).map(x=>[x[0]+'|'+x[1],x[2]]))});
  const items=mv.rows.filter(r=>['CERAMIC TILE','GRANITE TILE'].includes(r['Sub Category'])).map(r=>{const c=String(r['No Item']).trim();return{c,b:bc[c]||'',n:r['Description'],s:r['Sub Category'].slice(0,3),t:+r['Ending Balance Qty']||0,d:dc[c]||{},p:Object.entries(pn[c]||{}).map(([k,v])=>[k.split('|')[0],k.split('|').slice(1).join('|'),v])}});
- DATA={store,date:new Date().toLocaleDateString('id-ID'),items};await api('stock',DATA);index();render();m.style.color='var(--ok)';m.textContent=`Selesai & dibagikan ke semua pengguna: ${items.length} item keramik/granit.`}catch(e){m.style.color='var(--er)';m.textContent='Gagal: '+e.message}};
+ DATA={store,date:new Date().toLocaleDateString('id-ID'),items,updatedAt:new Date().toISOString()};await api('stock',DATA);index();render();m.style.color='var(--ok)';m.textContent=`Selesai & dibagikan ke semua pengguna: ${items.length} item keramik/granit.`}catch(e){m.style.color='var(--er)';m.textContent='Gagal: '+e.message}};
 $('#rst').onclick=async()=>{try{await api('stock',{reset:true});DATA=await (await fetch('/data/stock.json')).json();index();render();$('#dmsg').textContent='Kembali ke data bawaan.'}catch(e){$('#dmsg').textContent='Gagal: '+e.message}};
-loadStock();loadSamples();setInterval(loadSamples,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadSamples()});
+$('#kpi').onclick=e=>{const k=e.target.closest('[data-f]');if(k){filt=k.dataset.f;LIM=200;render();$('#chips').scrollIntoView({block:'nearest'})}};$('#refresh').onclick=()=>{loadStock();loadSamples()};loadStock();loadSamples();setInterval(loadSamples,60000);setInterval(loadStock,300000);document.addEventListener('visibilitychange',()=>{if(!document.hidden){loadSamples();loadStock()}});
 </script></body></html>
