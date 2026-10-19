@@ -95,3 +95,35 @@ Data stok awal di `public/data/stock.json` hanya dipakai sebagai cadangan jika b
 - **Dua orang input bersamaan**: tiap perubahan diproses di server satu per satu sehingga aman. Namun jika dua orang upload data stok pada waktu yang sama, yang terakhir menimpa yang lain.
 - **Backup**: tab Input Sample punya tombol **Ekspor sample (CSV)**. Lakukan sesekali sebagai cadangan.
 - **Batasi akses lebih ketat** (hanya orang tertentu yang boleh melihat): fitur proteksi password Netlify tersedia di paket berbayar tertentu. Alternatifnya, jangan sebarkan link ke luar tim.
+
+---
+
+## Tab Cek Promo & POP
+
+Website promo digabung sebagai tab **🏷️ Cek Promo** (file `public/promo.html`, tampil di dalam website utama). Di tab Monitoring, tiap item punya tombol **🏷️ Promo** yang langsung membuka promo item tersebut.
+
+- Login promo (admin/staff) tetap memakai akun yang sudah ada di file promo.
+- Data promo bawaan sudah tertanam di `promo.html`. Untuk memperbarui data bagi **semua pengguna**: di tab Cek Promo (login admin) import laporan promo terbaru, klik **Export data.json**, lalu simpan file itu sebagai `public/data.json` di repo dan commit. Netlify akan deploy ulang dan semua pengguna memakai data baru.
+- Import tanpa export hanya tersimpan di browser yang dipakai.
+
+---
+
+## Update Promo Harian (penugasan per kategori & monitoring)
+
+Di tab **Cek Promo** (setelah login) ada panel **Update Promo Harian**. Data tersimpan di server (fungsi `promotasks.mjs`), jadi admin dan petugas melihat data yang sama. Peran admin/staff diperiksa di server.
+
+**Admin: membuat penugasan**
+1. Pilih **tanggal**, lalu buka *Buat penugasan update promo untuk tanggal ini*.
+2. Centang kriteria promo yang ada update: **Mulai berlaku hari itu**, **Berakhir hari itu**, atau **Semua promo aktif**. Klik **Tampilkan promo**. Daftar diambil dari data promo; semua terpilih otomatis, hilangkan centang pada promo yang tidak perlu.
+3. Di **Penugasan per kategori**, tentukan petugas untuk tiap kategori (mis. Flooring and Wall ke sc1, Bathroom ke sc2). Ada tombol *Semua kategori ke…* dan *Bagi rata kategori ke semua petugas*. Kategori yang tidak perlu bisa tidak dicentang.
+4. Klik **Buat tugas**. Satu tugas = satu promo pada satu kategori, lengkap dengan jumlah barangnya. Tugas yang sama (promo + kategori) di tanggal yang sama tidak dibuat dua kali.
+
+**Admin: monitoring**
+- Ringkasan hari itu: total tugas, selesai, proses, belum, kendala, belum ditugaskan, serta progress dalam jumlah barang.
+- Progress per petugas, progress per kategori, dan riwayat 7 hari terakhir (klik baris untuk membuka tanggal itu).
+- Daftar tugas dengan filter status, kategori, dan petugas. Ubah petugas per baris, atau **Tugaskan semua yang tampil** (misalnya setelah memfilter satu kategori), atau centang beberapa baris. Tombol **Lihat** menampilkan daftar barang dalam tugas itu dan bisa diexport ke CSV.
+- **Export CSV** mengunduh rekap hari itu. Data bisa dipindah ke tanggal lain lewat endpoint `carry` di server (belum ada tombolnya di tampilan).
+
+**Petugas (staff)**: hanya melihat tugas miliknya, dapat membuka daftar barang, lalu mengubah status (Belum, Proses, Selesai, Kendala) dan mengisi catatan.
+
+Halaman menyegarkan data tiap 1 menit. Setelah update ini, semua pengguna perlu login ulang di tab Cek Promo satu kali.
