@@ -272,7 +272,7 @@ $('lbx').onclick=()=>{$('lb').hidden=true};$('lb').addEventListener('click',e=>{
 $('lbr').onclick=async()=>{if(!LB||!confirm('Hapus foto ini?'))return;const f=FIND.find(x=>x.id===LB.id);if(f){f.fotos=(f.fotos||[]).filter(p=>p.k!==LB.k);svF()}try{await fdel(LB.k)}catch(e){}PH.delete(LB.k);$('lb').hidden=true;rf()};
 $('lbd').onclick=async()=>{if(!LB)return;const d=PH.get(LB.k)||await fget(LB.k),b=atob(d.split(',')[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);const f=FIND.find(x=>x.id===LB.id);await saveFile('Bukti_'+(f?f.itemNo:'foto')+'_'+LB.k.slice(-4)+'.jpg',u)};
 const STAFF=Object.keys(USERS).filter(u=>USERS[u][1]==='staff'),asOpts=(v)=>'<option value="">— Belum ditugaskan —</option>'+STAFF.map(u=>`<option${u===v?' selected':''}>${u}</option>`).join('');
-function enter(u){USER=u;ROLE=USERS[u][1];const PR=document.getElementById('pr');PR.classList.add('in');PR.classList.toggle('staff',ROLE==='staff');psub(ROLE==='admin'?'adm':'ut');
+function enter(u){USER=u;ROLE=USERS[u][1];const PR=document.getElementById('pr');PR.classList.add('lgd');PR.classList.toggle('staff',ROLE==='staff');psub(ROLE==='admin'?'adm':'ut');
  $('who').innerHTML='<b>'+esc(u)+'</b> · '+(ROLE==='admin'?'Admin':'Staff');try{sessionStorage.setItem('cp_user',u)}catch(e){}
  rf();utInit();if(ROLE==='admin'&&!booted){booted=true;load().then(search).catch(e=>{$('stat').textContent='Gagal memuat data: '+e.message})}if(PENDING){const c=PENDING;PENDING='';setTimeout(()=>runFind(c),50)}}
 function doLogin(){const u=$('lu').value.trim().toLowerCase(),p=$('lp').value,e=USERS[u];
