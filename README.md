@@ -9,11 +9,15 @@ sample-pajangan-netlify/
 ├─ netlify.toml                 pengaturan Netlify
 ├─ package.json                 dependensi fungsi server
 ├─ public/
-│  ├─ index.html                website
-│  └─ data/stock.json           data stok awal (15 Okt 2026)
-└─ netlify/functions/
-   ├─ samples.mjs               API simpan data sample
-   └─ stock.mjs                 API simpan data stok
+│  ├─ index.html                website (satu halaman: Input Sample, Monitoring, Promo, Data Stok)
+│  ├─ js/promo.js               logika Cek Promo, Update Harian, Temuan POP
+│  ├─ js/pako.min.js            pustaka dekompresi
+│  └─ data/
+│     ├─ stock.json             data stok awal (15 Okt 2026)
+│     └─ promo-data.txt         data promo bawaan
+└─ netlify/
+   ├─ functions/                API server: samples, stock, promotasks
+   └─ lib/users.mjs             daftar akun promo (untuk cek login di server)
 ```
 
 > **Penting:** jangan pakai fitur drag & drop folder (Netlify Drop). Cara itu tidak menjalankan fungsi server, sehingga data tidak tersimpan bersama. Gunakan **Cara A (GitHub)** atau **Cara B (CLI)**.
@@ -98,13 +102,13 @@ Data stok awal di `public/data/stock.json` hanya dipakai sebagai cadangan jika b
 
 ---
 
-## Tab Cek Promo & POP
+## Tab Promo (menyatu dengan website)
 
-Website promo digabung sebagai tab **🏷️ Cek Promo** (file `public/promo.html`, tampil di dalam website utama). Di tab Monitoring, tiap item punya tombol **🏷️ Promo** yang langsung membuka promo item tersebut.
+Tab **🏷️ Promo** ada di menu yang sama dengan tab lain dan memakai tema yang sama. Setelah login (admin/staff) ada tiga sub-menu: **Cek Promo & POP** (khusus admin), **Update Harian**, dan **Temuan POP**.
 
-- Login promo (admin/staff) tetap memakai akun yang sudah ada di file promo.
-- Data promo bawaan sudah tertanam di `promo.html`. Untuk memperbarui data bagi **semua pengguna**: di tab Cek Promo (login admin) import laporan promo terbaru, klik **Export data.json**, lalu simpan file itu sebagai `public/data.json` di repo dan commit. Netlify akan deploy ulang dan semua pengguna memakai data baru.
-- Import tanpa export hanya tersimpan di browser yang dipakai.
+- Di tab Monitoring, tombol **🏷️ Promo** pada tiap item langsung membuka Cek Promo untuk item itu.
+- Di Cek Promo ada tombol 📷 untuk scan barcode, dan kartu item menampilkan **Sample pajangan** (lokasi sample bila ada).
+- Data promo bawaan ada di `public/data/promo-data.txt`. Untuk memperbarui data bagi **semua pengguna**: login admin, import laporan promo terbaru, klik **Export data.json**, simpan sebagai `public/data.json` di repo, lalu commit. Netlify akan deploy ulang. Import tanpa export hanya tersimpan di browser yang dipakai.
 
 ---
 
