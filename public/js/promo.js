@@ -119,7 +119,7 @@ async function load(fresh){
   D=JSON.parse(tx);D.meta='Data bawaan';
  }
  D.items.forEach(i=>{i.l=i[2].toLowerCase()});
- $('stat').textContent=D.items.length.toLocaleString('id-ID')+' item dimuat';$('src').textContent=srcTxt();
+ $('stat').classList.remove('ld');$('stat').textContent=D.items.length.toLocaleString('id-ID')+' item dimuat';$('src').textContent=srcTxt();
 }
 /* ===== import file Excel baru ===== */
 function applyFile(k,rows){
@@ -171,7 +171,7 @@ $('imp').addEventListener('change',async e=>{
   try{const wb=XLSX.read(await f.arrayBuffer(),{type:'array'}),rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true,defval:null}),k=detect(wb.SheetNames[0],rows);
    if(!k){bad.push(f.name);continue}ok.push(KN[k]+' ('+applyFile(k,rows).toLocaleString('id-ID')+' baris)')}catch(x){bad.push(f.name)}}
  if(ok.length){D.localAt=new Date().toISOString();D.meta='Import '+new Date().toLocaleString('id-ID')+' – '+ok.map(s=>s.split(' (')[0]).join(', ');try{await idb('put',D)}catch(x){}}
- D.items.forEach(i=>{i.l=i[2].toLowerCase()});sel=null;$('stat').textContent=D.items.length.toLocaleString('id-ID')+' item dimuat';$('src').textContent=srcTxt();search();
+ D.items.forEach(i=>{i.l=i[2].toLowerCase()});sel=null;$('stat').classList.remove('ld');$('stat').textContent=D.items.length.toLocaleString('id-ID')+' item dimuat';$('src').textContent=srcTxt();search();
  alert((ok.length?'Berhasil diimpor:\n'+ok.join('\n'):'Tidak ada file yang berhasil diimpor.')+(bad.length?'\n\nTidak dikenali: '+bad.join(', '):''));
 });
 $('rst').addEventListener('click',async()=>{if(!confirm('Kembali ke data situs? Data hasil import di perangkat ini akan dihapus (daftar temuan tetap aman).'))return;try{await idb('del')}catch(x){}await load(true);sel=null;search()});
@@ -274,7 +274,7 @@ $('lbd').onclick=async()=>{if(!LB)return;const d=PH.get(LB.k)||await fget(LB.k),
 const STAFF=Object.keys(USERS).filter(u=>USERS[u][1]==='staff'),asOpts=(v)=>'<option value="">— Belum ditugaskan —</option>'+STAFF.map(u=>`<option${u===v?' selected':''}>${u}</option>`).join('');
 function enter(u){USER=u;ROLE=USERS[u][1];const PR=document.getElementById('pr');PR.classList.add('lgd');PR.classList.toggle('staff',ROLE==='staff');psub(ROLE==='admin'?'adm':'ut');
  $('who').innerHTML='<b>'+esc(u)+'</b> · '+(ROLE==='admin'?'Admin':'Staff');try{sessionStorage.setItem('cp_user',u)}catch(e){}
- rf();utInit();if(ROLE==='admin'&&!booted){booted=true;load().then(search).catch(e=>{$('stat').textContent='Gagal memuat data: '+e.message})}if(PENDING){const c=PENDING;PENDING='';setTimeout(()=>runFind(c),50)}}
+ rf();utInit();if(ROLE==='admin'&&!booted){booted=true;load().then(search).catch(e=>{$('stat').classList.remove('ld');$('stat').textContent='Gagal memuat data: '+e.message})}if(PENDING){const c=PENDING;PENDING='';setTimeout(()=>runFind(c),50)}}
 function doLogin(){const u=$('lu').value.trim().toLowerCase(),p=$('lp').value,e=USERS[u];
  const hh=e?sha256(SALT+u+':'+p):'';if(e&&hh===e[0]){CPH=hh;try{sessionStorage.setItem('cp_h',hh)}catch(x){}$('le').hidden=true;$('lp').value='';enter(u)}else{$('le').hidden=false;$('le').textContent='Username atau password salah.'}}
 $('lgb').addEventListener('click',doLogin);['lu','lp'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()}));
@@ -287,39 +287,42 @@ const ucnt=L=>{const c={Belum:0,Proses:0,Selesai:0,Kendala:0};L.forEach(t=>{c[t.
 const unum=L=>{let t=0,d=0;L.forEach(x=>{t+=x.n||0;if(x.status==='Selesai')d+=x.n||0});return{t,d}};
 const ubar=p=>`<div style="background:var(--head);border-radius:4px;height:8px;display:inline-block;width:80px;vertical-align:middle"><div style="width:${p}%;height:8px;border-radius:4px;background:var(--ok)"></div></div> <span class="muted">${p}%</span>`;
 const sn=u=>String(u||'').split('.')[0];
-async function uapi(method,q,body){const r=await fetch('/api/promotasks'+(q||''),{method,headers:{'content-type':'application/json','x-cp-user':USER,'x-cp-hash':CPH},body:body?JSON.stringify(body):undefined});if(!r.ok){let m='';try{m=(await r.json()).error}catch(e){}throw new Error(m||('Server error '+r.status))}return r.json()}
+async function uapi(method,q,body){const tb=document.getElementById('topbar');tb.classList.add('on');try{return await uapi0(method,q,body)}finally{tb.classList.remove('on')}}
+async function uapi0(method,q,body){const r=await fetch('/api/promotasks'+(q||''),{method,headers:{'content-type':'application/json','x-cp-user':USER,'x-cp-hash':CPH},body:body?JSON.stringify(body):undefined});if(!r.ok){let m='';try{m=(await r.json()).error}catch(e){}throw new Error(m||('Server error '+r.status))}return r.json()}
 async function ensureD(){if(!D)await load()}
-function uidx(){if(UIX&&UIX.D===D)return UIX;const P=new Map(),add=(pi,cat,n)=>{let m=P.get(pi);if(!m){m=new Map();P.set(pi,m)}m.set(cat,(m.get(cat)||0)+n)};
- for(const it of D.items){const ps=new Set();(D.ip[it[0]]||[]).forEach(r=>ps.add(r[1]));if(it[3])(D.bp[it[3]]||[]).forEach(r=>ps.add(r[1]));if(ps.size){const cat=D.cats[it[6]]||'LAINNYA';ps.forEach(pi=>add(pi,cat,1))}}
- for(const k in D.tab)D.tab[k][1].forEach(x=>add(+k,x[0]||TBC,1));
- UIX={D,P,byNo:new Map(D.promos.map((p,i)=>[p[0],i]))};return UIX}
-function uitems(no,cat){const pi=uidx().byNo.get(no);if(pi==null)return[];const out=[];
- for(const it of D.items){if((D.cats[it[6]]||'LAINNYA')!==cat)continue;if((D.ip[it[0]]||[]).some(r=>r[1]===pi)||(it[3]&&(D.bp[it[3]]||[]).some(r=>r[1]===pi)))out.push(it)}
- const t=D.tab[pi];if(t)t[1].forEach(x=>{if((x[0]||TBC)===cat)out.push([x[1],'',x[2],'','','',0])});return out}
+const UTY={D:'Promo Discount',M:'Mix & Match',B:'MultiBuy',T:'Total Offer'};let UY='all';
+function uidx(){if(UIX&&UIX.D===D)return UIX;const P=new Map(),PT=new Map(),inc=(m,k,cat,n)=>{let q=m.get(k);if(!q){q=new Map();m.set(k,q)}q.set(cat,(q.get(cat)||0)+n)},add=(pi,ty,cat,n)=>{inc(P,pi,cat,n);inc(PT,pi+'|'+ty,cat,n)};
+ for(const it of D.items){const cat=D.cats[it[6]]||'LAINNYA',seen=new Set(),f=r=>{const k=r[1]+'|'+r[0];if(!seen.has(k)){seen.add(k);add(r[1],r[0],cat,1)}};(D.ip[it[0]]||[]).forEach(f);if(it[3])(D.bp[it[3]]||[]).forEach(f)}
+ for(const k in D.tab)D.tab[k][1].forEach(x=>add(+k,'T',x[0]||TBC,1));
+ UIX={D,P,PT,byNo:new Map(D.promos.map((p,i)=>[p[0],i]))};return UIX}
+function uitems(no,cat,ty){const pi=uidx().byNo.get(no);if(pi==null)return[];const out=[],ok=r=>r[1]===pi&&(!ty||r[0]===ty);
+ for(const it of D.items){if((D.cats[it[6]]||'LAINNYA')!==cat)continue;if((D.ip[it[0]]||[]).some(ok)||(it[3]&&(D.bp[it[3]]||[]).some(ok)))out.push(it)}
+ const t=D.tab[pi];if(t&&(!ty||ty==='T'))t[1].forEach(x=>{if((x[0]||TBC)===cat)out.push([x[1],'',x[2],'','','',0])});return out}
 function ucands(){const X=uidx(),d=UD,m=$('uam').checked,e=$('uae').checked,a=$('uaa').checked,q=$('uaq').value.trim().toLowerCase(),r=[];
  D.promos.forEach((p,i)=>{if(!X.P.has(i))return;const w=[];if(m&&p[2]===d)w.push('Mulai hari ini');if(e&&p[3]===d)w.push('Berakhir hari ini');if(a&&p[2]<=d&&d<=p[3]&&!w.length)w.push('Aktif');if(!w.length)return;if(q&&!(p[0]+' '+p[1]).toLowerCase().includes(q))return;r.push({i,no:p[0],name:p[1],s:p[2],e:p[3],w})});
  return r.sort((x,y)=>x.w[0].localeCompare(y.w[0])||x.no.localeCompare(y.no))}
 const ucats=()=>{const X=uidx(),s=new Set();USEL.forEach(i=>{const m=X.P.get(i);if(m)m.forEach((n,c)=>s.add(c))});return[...s].sort((a,b)=>a.localeCompare(b))};
 function utInit(){const A=isA();
  $('ut').innerHTML=`<div class="panel"><h2>${A?'Update Promo Harian':'Tugas Update Promo Saya'}<small id="ush"></small></h2>
- <div class="bar" style="margin:0 0 10px"><label>Tanggal <input type="date" id="ud" value="${UD}"></label><button class="btn" id="urf">Muat ulang</button>${A?'<button class="btn" id="ucsv">Export CSV</button>':''}</div>
+ <div class="bar" style="margin:0 0 10px"><label>Tanggal <input type="date" id="ud" value="${UD}"></label><button class="btn" id="urf">Muat ulang</button>${A?'<button class="btn" id="ucsv">Export Excel</button>':''}</div>
  ${A?`<details id="uadd" style="border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin-bottom:14px"><summary style="cursor:pointer;font-weight:600">Buat penugasan update promo untuk tanggal ini</summary>
  <div class="muted" style="margin:8px 0">1) Tampilkan promo yang ada update pada tanggal di atas. 2) Pilih promo dan tentukan petugas per kategori. 3) Buat tugas.</div>
  <div class="bar" style="margin:0 0 8px"><label><input type="checkbox" id="uam" checked> Mulai berlaku hari itu</label><label><input type="checkbox" id="uae" checked> Berakhir hari itu</label><label><input type="checkbox" id="uaa"> Semua promo aktif</label><label>Cari <input type="text" id="uaq" placeholder="nama / no promo" style="width:170px"></label><button class="btn" data-ua="find">Tampilkan promo</button></div>
  <div id="upl"></div><div id="ucat"></div></details>`:''}
- <div id="ubody"><div class="muted">Memuat…</div></div></div>`;utLoad()}
+ <div id="ubody"><div class="muted"><span class="ld">Memuat…</span></div></div></div>`;utLoad()}
 async function utLoad(){try{UT=(await uapi('GET','?date='+UD)).tasks;UE='';if(isA())UH=(await uapi('GET','?summary=7&to='+UD)).days}catch(e){UE=e.message}utRender()}
 function renderUpl(){const X=uidx();
  $('upl').innerHTML=UPR.length?`<div class="muted" style="margin:6px 0">${UPR.length} promo ditemukan · ${USEL.size} dipilih <button class="btn fb" data-ua="allp">Pilih semua</button> <button class="btn fb" data-ua="nonep">Kosongkan</button></div><div class="tw" style="max-height:320px;overflow:auto">`+tbl(['','Promo','Periode','Keterangan','Barang'],UPR.map(c=>{const m=X.P.get(c.i),n=m?[...m.values()].reduce((a,b)=>a+b,0):0;return `<tr><td><input type="checkbox" class="upk" data-i="${c.i}"${USEL.has(c.i)?' checked':''} aria-label="Pilih"></td><td>${esc(c.no)}<div class="muted">${esc(c.name)}</div></td><td>${per([0,0,c.s,c.e])}</td><td>${c.w.join(', ')}</td><td class="num">${n}</td></tr>`}),'',1)+'</div>':'<div class="muted">Tidak ada promo yang cocok pada tanggal ini. Coba centang "Semua promo aktif".</div>'}
 function renderUcat(){if(!UPR.length||!USEL.size){$('ucat').innerHTML='';return}const X=uidx(),tot=new Map();USEL.forEach(i=>{const m=X.P.get(i);if(m)m.forEach((n,c)=>{const o=tot.get(c)||{p:0,n:0};o.p++;o.n+=n;tot.set(c,o)})});let nt=0;
  const rows=ucats().map(c=>{const s=UC[c]||(UC[c]={on:true,to:''}),o=tot.get(c);if(s.on)nt+=o.p;return `<tr><td><input type="checkbox" class="ucon" data-c="${esc(c)}"${s.on?' checked':''} aria-label="Sertakan"></td><td>${esc(c)}</td><td class="num">${o.p}</td><td class="num">${o.n}</td><td><select class="ucs" data-c="${esc(c)}">${asOpts(s.to)}</select></td></tr>`});
- $('ucat').innerHTML=`<h2 style="margin:12px 0 6px">Penugasan per kategori</h2><div class="bar" style="margin:0 0 8px"><label>Semua kategori ke <select id="ucall">${asOpts('')}</select></label><button class="btn" data-ua="catall">Terapkan</button><button class="btn" data-ua="catrr">Bagi rata kategori ke semua petugas</button></div>`+tbl(['','Kategori','Promo','Barang','Petugas'],rows,'',1)+`<div class="bar" style="margin-top:10px"><button class="btn" data-ua="create" style="background:var(--acc);color:#fff;border-color:var(--acc)">Buat ${nt} tugas</button><span>Satu tugas = satu promo pada satu kategori.</span></div>`}
-async function ucreate(){const X=uidx(),items=[];USEL.forEach(i=>{const p=D.promos[i],m=X.P.get(i);if(m)m.forEach((n,c)=>{const s=UC[c];if(s&&s.on)items.push({no:p[0],name:p[1],cat:c,n,to:s.to})})});
+ $('ucat').innerHTML=`<h2 style="margin:12px 0 6px">Penugasan per kategori</h2><div class="bar" style="margin:0 0 8px"><label>Semua kategori ke <select id="ucall">${asOpts('')}</select></label><button class="btn" data-ua="catall">Terapkan</button><button class="btn" data-ua="catrr">Bagi rata kategori ke semua petugas</button></div>`+tbl(['','Kategori','Promo','Barang','Petugas'],rows,'',1)+`<div class="bar" style="margin-top:10px"><button class="btn" data-ua="create" style="background:var(--acc);color:#fff;border-color:var(--acc)">Buat ${nt} tugas</button><span>Satu tugas = satu promo pada satu kategori, dipisah per jenis report (Discount, Mix &amp; Match, MultiBuy, Total Offer).</span></div>`}
+async function ucreate(){const X=uidx(),items=[];USEL.forEach(i=>{const p=D.promos[i];Object.keys(UTY).forEach(ty=>{const m=X.PT.get(i+'|'+ty);if(m)m.forEach((n,c)=>{const s=UC[c];if(s&&s.on)items.push({no:p[0],name:p[1],cat:c,n,to:s.to,type:ty})})})});
  if(!items.length){alert('Belum ada tugas yang bisa dibuat. Pilih promo dan kategori dulu.');return}
  if(!confirm('Buat '+items.length+' tugas untuk tanggal '+UD+'?'))return;let add=0,skip=0;
  try{for(let k=0;k<items.length;k+=400){const r=await uapi('POST','',{op:'add',date:UD,items:items.slice(k,k+400)});add+=r.added;skip+=r.skipped}}catch(e){alert('Gagal sebagian: '+e.message)}
  await utLoad();alert(add+' tugas dibuat'+(skip?', '+skip+' dilewati karena sudah ada.':'.'))}
-function utRender(){
+function utRender(){window._UT=UT;const TF=UY==='all'?UT:UT.filter(t=>t.type===UY);utRender2(TF)}
+function utRender2(UT){
  const A=isA(),c=ucnt(UT),tot=UT.length,nu=unum(UT),p=upct(nu.d,nu.t);if(!$('ubody'))return;
  $('ush').textContent=` ${tot} tugas · ${c.Selesai} selesai · ${nu.d}/${nu.t} barang (${p}%)`;
  if(UE){$('ubody').innerHTML=`<div class="vd bad">${esc(UE)}${/server|404|500/i.test(UE)?'<br>Fitur ini butuh fungsi server Netlify (deploy folder lengkap).':''}</div>`;return}
@@ -327,15 +330,15 @@ function utRender(){
  const L=UT.filter(t=>(UF==='all'||t.status===UF)&&(UK==='all'||(t.cat||'-')===UK)&&(!A||UP==='all'||(UP==='none'?!t.to:t.to===UP)));
  const grp=(keys,f)=>keys.map(k=>{const x=UT.filter(t=>f(t)===k);if(!x.length)return'';const q=ucnt(x),m=unum(x);return `<tr><td>${esc(k.includes('.mgsleman')?sn(k):(k||'-'))}</td><td class="num">${x.length}</td><td class="num">${q.Selesai}</td><td class="num">${q.Proses}</td><td class="num">${q.Belum}</td><td class="num">${q.Kendala}</td><td class="num">${m.d}/${m.t}</td><td>${ubar(upct(m.d,m.t))}</td></tr>`}).join('');
  const H=['Total','Selesai','Proses','Belum','Kendala','Barang'].map(x=>x),mk=(f,rows,e)=>tbl([f,'Tugas','Selesai','Proses','Belum','Kendala','Barang','Progress'],[rows].filter(Boolean),e,1).replace(/<th>(Tugas|Selesai|Proses|Belum|Kendala|Barang)</g,'<th class="num">$1<');
- const cols=A?8:6,row=t=>{const own=A||t.to===USER;return `<tr>${A?`<td><input type="checkbox" class="uck" data-id="${t.id}" aria-label="Pilih"></td>`:''}<td>${esc(t.no)}<div class="muted">${esc(t.name||'')}</div></td><td>${esc(t.cat||'-')}</td><td class="num">${t.n||0}<div><button class="btn fb" data-uv="${t.id}">${UOPEN===t.id?'Tutup':'Lihat'}</button></div></td>${A?`<td><select class="uas" data-id="${t.id}">${asOpts(t.to)}</select></td>`:''}<td>${own?`<select class="ust" data-id="${t.id}">${UST.map(s=>`<option${s===t.status?' selected':''}>${s}</option>`).join('')}</select>`:esc(t.status)}</td><td>${own?`<input type="text" class="unt" data-id="${t.id}" value="${esc(t.note||'')}" placeholder="Catatan" style="min-width:140px;padding:5px 7px">`:esc(t.note||'')}</td><td>${t.at?esc(sn(t.by))+'<div class="muted">'+fmtT(t.at)+'</div>':'<span class="muted">-</span>'}</td></tr>`+(UOPEN===t.id?itemsRow(t,cols+1):'')};
- const itemsRow=(t,n)=>{if(!D)return `<tr><td colspan="${n}" class="muted">Memuat data barang…</td></tr>`;const I=uitems(t.no,t.cat);return `<tr><td colspan="${n}" style="background:var(--head)"><div class="muted" style="margin-bottom:6px">${I.length} barang${I.length>200?' (200 pertama ditampilkan)':''} <button class="btn fb" data-ux="${t.id}">Export CSV</button></div>`+tbl(['No Item','Barcode','Deskripsi','Brand'],I.slice(0,200).map(i=>`<tr><td>${i[0]}</td><td>${i[1]||'-'}</td><td>${esc(i[2])}</td><td>${esc(i[4])}</td></tr>`),'Tidak ada barang.',1)+'</td></tr>'};
+ const cols=A?8:6,row=t=>{const own=A||t.to===USER;return `<tr>${A?`<td><input type="checkbox" class="uck" data-id="${t.id}" aria-label="Pilih"></td>`:''}<td>${esc(t.no)}<div class="muted">${esc(t.name||'')}</div>${t.type?`<span class="b a" style="margin-top:3px">${UTY[t.type]}</span>`:''}</td><td>${esc(t.cat||'-')}</td><td class="num">${t.n||0}<div><button class="btn fb" data-uv="${t.id}">${UOPEN===t.id?'Tutup':'Lihat'}</button></div></td>${A?`<td><select class="uas" data-id="${t.id}">${asOpts(t.to)}</select></td>`:''}<td>${own?`<select class="ust" data-id="${t.id}">${UST.map(s=>`<option${s===t.status?' selected':''}>${s}</option>`).join('')}</select>`:esc(t.status)}</td><td>${own?`<input type="text" class="unt" data-id="${t.id}" value="${esc(t.note||'')}" placeholder="Catatan" style="min-width:140px;padding:5px 7px">`:esc(t.note||'')}</td><td>${t.at?esc(sn(t.by))+'<div class="muted">'+fmtT(t.at)+'</div>':'<span class="muted">-</span>'}</td></tr>`+(UOPEN===t.id?itemsRow(t,cols+1):'')};
+ const itemsRow=(t,n)=>{if(!D)return `<tr><td colspan="${n}" class="muted">Memuat data barang…</td></tr>`;const I=uitems(t.no,t.cat,t.type);return `<tr><td colspan="${n}" style="background:var(--head)"><div class="muted" style="margin-bottom:6px">${I.length} barang${I.length>200?' (200 pertama ditampilkan)':''} <button class="btn fb" data-ux="${t.id}">Export Excel</button></div>`+tbl(['No Item','Barcode','Deskripsi','Brand'],I.slice(0,200).map(i=>`<tr><td>${i[0]}</td><td>${i[1]||'-'}</td><td>${esc(i[2])}</td><td>${esc(i[4])}</td></tr>`),'Tidak ada barang.',1)+'</td></tr>'};
  const kp=(l,v,k)=>`<div><div class="k">${l}</div><div class="v"${k?` style="color:var(--${k})"`:''}>${v}</div></div>`,un=UT.filter(t=>!t.to).length;
  $('ubody').innerHTML=(A?`<div class="info" style="margin-bottom:14px">${kp('Total tugas',tot)}${kp('Selesai',c.Selesai,'ok')}${kp('Sedang diproses',c.Proses,'warn')}${kp('Belum dikerjakan',c.Belum,'bad')}${kp('Ada kendala',c.Kendala,'bad')}${kp('Belum ditugaskan',un)}${kp('Barang selesai',nu.d+' / '+nu.t)}${kp('Progress barang',p+'%')}</div>
  <h2>Progress per petugas</h2>${mk('Petugas',grp(STAFF,t=>t.to),'Belum ada tugas yang ditugaskan pada tanggal ini.')}
  <h2 style="margin-top:14px">Progress per kategori</h2>${mk('Kategori',grp(cats,t=>t.cat||'-'),'Belum ada tugas.')}
  <h2 style="margin-top:14px">7 hari terakhir</h2>${tbl(['Tanggal','Tugas','Selesai','Barang','Progress'],UH.map(d=>`<tr style="cursor:pointer" data-d="${d.date}"><td>${d.date.slice(8)}/${d.date.slice(5,7)}/${d.date.slice(2,4)}${d.date===UD?' ◀':''}</td><td class="num">${d.total}</td><td class="num">${d.Selesai}</td><td class="num">${d.bs||0}/${d.tb||0}</td><td>${d.tb?ubar(upct(d.bs,d.tb)):(d.total?ubar(upct(d.Selesai,d.total)):'<span class="muted">-</span>')}</td></tr>`),'',1).replace(/<th>(Tugas|Selesai|Barang)</g,'<th class="num">$1<')}
  <h2 style="margin:14px 0 8px">Daftar tugas</h2>`:`<div class="muted" style="margin-bottom:8px">Ubah status dan catatan progres tugas Anda. Selesai: ${c.Selesai} dari ${tot} tugas (${nu.d} dari ${nu.t} barang).</div>`)+
- `<div class="bar" style="margin:0 0 10px"><label>Status <select id="uf">${[['all','Semua'],...UST.map(s=>[s,s])].map(([v,t])=>`<option value="${v}"${v===UF?' selected':''}>${t}</option>`).join('')}</select></label><label>Kategori <select id="uk"><option value="all">Semua</option>${cats.map(k=>`<option${k===UK?' selected':''}>${esc(k)}</option>`).join('')}</select></label>${A?`<label>Petugas <select id="up"><option value="all">Semua</option><option value="none"${UP==='none'?' selected':''}>Belum ditugaskan</option>${STAFF.map(u=>`<option${u===UP?' selected':''}>${u}</option>`).join('')}</select></label>`:''}</div>`+
+ `<div class="chips" id="uty">${[['all','Semua report'],...Object.entries(UTY)].map(([k,l])=>`<button class="chip${UY===k?' on':''}" data-uy="${k}">${l} (${k==='all'?window._UT.length:window._UT.filter(t=>t.type===k).length})</button>`).join('')}</div>`+`<div class="bar" style="margin:0 0 10px"><label>Status <select id="uf">${[['all','Semua'],...UST.map(s=>[s,s])].map(([v,t])=>`<option value="${v}"${v===UF?' selected':''}>${t}</option>`).join('')}</select></label><label>Kategori <select id="uk"><option value="all">Semua</option>${cats.map(k=>`<option${k===UK?' selected':''}>${esc(k)}</option>`).join('')}</select></label>${A?`<label>Petugas <select id="up"><option value="all">Semua</option><option value="none"${UP==='none'?' selected':''}>Belum ditugaskan</option>${STAFF.map(u=>`<option${u===UP?' selected':''}>${u}</option>`).join('')}</select></label>`:''}</div>`+
  (A?`<div class="bar" style="margin:0 0 10px"><label>Tugaskan ke <select id="ubk">${asOpts('')}</select></label><button class="btn" data-ua="bulk">Yang dicentang</button><button class="btn" data-ua="shown">Semua yang tampil (${L.length})</button><button class="btn" data-ua="del">Hapus yang dicentang</button></div>`:'')+
  tbl(A?['<input type="checkbox" id="uca" aria-label="Pilih semua">','Promo','Kategori','Barang','Petugas','Status','Catatan','Update terakhir']:['Promo','Kategori','Barang','Status','Catatan','Update terakhir'],L.slice(0,ULIM).map(row),A?'Belum ada tugas pada tanggal ini.':'Tidak ada tugas update promo untuk Anda pada tanggal ini.',1)+(L.length>ULIM?`<div class="muted" style="margin-top:8px">Menampilkan ${ULIM} dari ${L.length} tugas. <button class="btn fb" data-ua="more">Tampilkan 300 lagi</button></div>`:'');
 }
@@ -344,10 +347,14 @@ $('ut').addEventListener('click',async e=>{const t=e.target;
  if(t.id==='urf'){utLoad();return}
  const dr=t.closest('tr[data-d]');if(dr){UD=dr.dataset.d;$('ud').value=UD;utLoad();return}
  if(t.dataset.uv){UOPEN=UOPEN===t.dataset.uv?null:t.dataset.uv;utRender();if(UOPEN&&!D){await ensureD();utRender()}return}
- if(t.dataset.ux){const k=UT.find(x=>x.id===t.dataset.ux);if(!k||!D)return;const cl=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';await saveFile('Barang_'+k.no+'_'+(k.cat||'').replace(/[^A-Za-z0-9]+/g,'_')+'.csv','\ufeff'+[['No Item','Barcode','Deskripsi','Brand','Master Brand','Kategori'],...uitems(k.no,k.cat).map(i=>[i[0],i[1],i[2],i[4],i[5],k.cat])].map(r=>r.map(cl).join(',')).join('\r\n'));return}
+ if(t.dataset.uy){UY=t.dataset.uy;ULIM=300;utRender();return}
+ if(t.dataset.ux){const k=UT.find(x=>x.id===t.dataset.ux);if(!k||!D)return;if(!window.XLSX){alert('Library Excel gagal dimuat (cek koneksi).');return}const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['No Item','Barcode','Deskripsi','Brand','Master Brand','Kategori','Jenis Promo'],...uitems(k.no,k.cat,k.type).map(i=>[i[0],i[1],i[2],i[4],i[5],k.cat,UTY[k.type]||''])]),'Barang');await saveFile('Barang_'+k.no+'_'+(UTY[k.type]||'').replace(/[^A-Za-z0-9]+/g,'')+'_'+(k.cat||'').replace(/[^A-Za-z0-9]+/g,'_')+'.xlsx',XLSX.write(wb,{type:'array',bookType:'xlsx'}));return}
  if(t.dataset.ua==='more'){ULIM+=300;utRender();return}
  if(!isA())return;
- if(t.id==='ucsv'){if(!UT.length){alert('Tidak ada data.');return}const cl=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';await saveFile('Update_Promo_'+UD+'.csv','\ufeff'+[['Tanggal','No Promo','Nama Promo','Kategori','Jumlah barang','Petugas','Status','Catatan','Update terakhir','Oleh'].map(cl).join(','),...UT.map(x=>[x.date,x.no,x.name,x.cat,x.n,x.to,x.status,x.note,x.at,x.by].map(cl).join(','))].join('\r\n'));return}
+ if(t.id==='ucsv'){if(!UT.length){alert('Tidak ada data.');return}if(!window.XLSX){alert('Library Excel gagal dimuat (cek koneksi).');return}
+  const H=['Tanggal','No Promo','Nama Promo','Jenis Promo','Kategori','Jumlah barang','Petugas','Status','Catatan','Update terakhir','Oleh'],wb=XLSX.utils.book_new(),sh=(L,n)=>{if(L.length)XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([H,...L.map(x=>[x.date,x.no,x.name,UTY[x.type]||'',x.cat,x.n,x.to,x.status,x.note,x.at,x.by])]),n)};
+  Object.entries(UTY).forEach(([k,l])=>sh(UT.filter(x=>x.type===k),l.replace('&','dan')));sh(UT.filter(x=>!UTY[x.type]),'Lainnya');
+  await saveFile('Update_Promo_'+UD+'.xlsx',XLSX.write(wb,{type:'array',bookType:'xlsx'}));return}
  const a=t.dataset.ua;if(!a)return;
  if(a==='find'){await ensureD();if(!D){alert('Data promo belum termuat.');return}UPR=ucands();USEL=new Set(UPR.map(c=>c.i));UC={};renderUpl();renderUcat();return}
  if(a==='allp'){USEL=new Set(UPR.map(c=>c.i));renderUpl();renderUcat();return}
@@ -355,7 +362,7 @@ $('ut').addEventListener('click',async e=>{const t=e.target;
  if(a==='catall'){ucats().forEach(c=>{(UC[c]=UC[c]||{on:true}).to=$('ucall').value});renderUcat();return}
  if(a==='catrr'){ucats().forEach((c,i)=>{(UC[c]=UC[c]||{on:true}).to=STAFF[i%STAFF.length]});renderUcat();return}
  if(a==='create'){await ucreate();return}
- if(a==='shown'){const ids=UT.filter(x=>(UF==='all'||x.status===UF)&&(UK==='all'||(x.cat||'-')===UK)&&(UP==='all'||(UP==='none'?!x.to:x.to===UP))).map(x=>x.id);if(!ids.length)return;if(confirm('Tugaskan '+ids.length+' tugas yang tampil ke '+($('ubk').value||'(belum ditugaskan)')+'?'))await uop({op:'assign',ids,to:$('ubk').value});return}
+ if(a==='shown'){const ids=UT.filter(x=>(UY==='all'||x.type===UY)&&(UF==='all'||x.status===UF)&&(UK==='all'||(x.cat||'-')===UK)&&(UP==='all'||(UP==='none'?!x.to:x.to===UP))).map(x=>x.id);if(!ids.length)return;if(confirm('Tugaskan '+ids.length+' tugas yang tampil ke '+($('ubk').value||'(belum ditugaskan)')+'?'))await uop({op:'assign',ids,to:$('ubk').value});return}
  const ids=[...document.querySelectorAll('#ut .uck:checked')].map(c=>c.dataset.id);
  if(!ids.length){alert('Centang dulu tugas yang dipilih.');return}
  if(a==='bulk')await uop({op:'assign',ids,to:$('ubk').value});

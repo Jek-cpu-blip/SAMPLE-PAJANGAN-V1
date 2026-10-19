@@ -64,11 +64,12 @@ export default async (req) => {
       const no = cl(it.no, 60);
       if (!no) continue;
       const cat = cl(it.cat, 80);
-      if (l.some((t) => t.no.toLowerCase() === no.toLowerCase() && (t.cat || "") === cat)) { skipped++; continue; }
+      const type = ["D", "M", "B", "T"].includes(it.type) ? it.type : "";
+      if (l.some((t) => t.no.toLowerCase() === no.toLowerCase() && (t.cat || "") === cat && (t.type || "") === type)) { skipped++; continue; }
       const to = STAFF.includes(it.to) ? it.to : pool.length ? pool[k++ % pool.length] : "";
       l.push({
         id: nid(), date, no, name: cl(it.name, 200), ins: cl(it.ins, 300),
-        cat, n: Math.max(0, Math.min(1e6, Math.floor(+it.n || 0))),
+        cat, type, n: Math.max(0, Math.min(1e6, Math.floor(+it.n || 0))),
         to, toAt: to ? now : "", status: "Belum", note: "", by: "", at: "",
         doneAt: "", created: now, createdBy: u,
       });
