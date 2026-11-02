@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 96" role="img" aria-label="Sample Pajangan - Monitoring Keramik &amp; Granit">
+<defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#1e3a8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="96" height="96" rx="22" fill="url(#bg)"/>
+  <!-- ubin keramik / granit 2x2 -->
+  <rect x="24" y="24" width="22" height="22" rx="4" fill="#ffffff"/>
+  <rect x="50" y="24" width="22" height="22" rx="4" fill="#bfdbfe"/>
+  <rect x="24" y="50" width="22" height="22" rx="4" fill="#93c5fd"/>
+  <rect x="50" y="50" width="22" height="22" rx="4" fill="#fbbf24"/>
+  <!-- bingkai scan barcode -->
+  <g fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M13 29V20a7 7 0 0 1 7-7h9"/>
+    <path d="M67 13h9a7 7 0 0 1 7 7v9"/>
+    <path d="M83 67v9a7 7 0 0 1-7 7h-9"/>
+    <path d="M29 83h-9a7 7 0 0 1-7-7v-9"/>
+  </g>
+  <!-- garis scan -->
+  <rect x="17" y="46" width="62" height="4" rx="2" fill="#f97316"/>
+
+  <text x="112" y="50" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif" font-size="36" font-weight="800" letter-spacing="-0.5" fill="#0f1f4d">Sample Pajangan</text>
+  <text x="113" y="76" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif" font-size="16.5" font-weight="500" letter-spacing="0.4" fill="#475467">Monitoring Keramik &amp; Granit</text>
+</svg>
