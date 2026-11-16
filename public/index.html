@@ -59,6 +59,8 @@ main{padding:12px 12px 24px}input,select{font-size:16px;padding:12px}button.b{pa
 }
 .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:10px}
 #pr{--ink:var(--tx);--mut:var(--mu);--line:var(--bd);--head:var(--grb);--acc:var(--pr);--bad:var(--er);--badb:var(--erb);--warn:var(--wn);--warnb:var(--wnb);--in:var(--bg)}
+/* Perbaikan kontras: #pr.in (status login) tidak boleh ikut aturan .in (badge biru) */
+#pr.in{background:none;color:var(--tx)}
 [hidden]{display:none!important}
 #pr:not(.in) .pgate{display:none}#pr.in #lg{display:none}#pr.staff #adm,#pr.staff .chip[data-p="adm"]{display:none!important}
 #pr .pv{display:none}#pr .pv.on{display:block}
