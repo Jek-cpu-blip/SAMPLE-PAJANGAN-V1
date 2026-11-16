@@ -16,7 +16,7 @@ sample-pajangan-netlify/
 │     ├─ stock.json             data stok awal (15 Okt 2026)
 │     └─ promo-data.txt         data promo bawaan
 └─ netlify/
-   ├─ functions/                API server: samples, stock, promotasks
+   ├─ functions/                API server: samples, stock, promotasks, promodata, promoprogress, promochanges
    └─ lib/users.mjs             daftar akun promo (untuk cek login di server)
 ```
 
@@ -108,6 +108,7 @@ Tab **🏷️ Promo** ada di menu yang sama dengan tab lain dan memakai tema yan
 
 - Di tab Monitoring, tombol **🏷️ Promo** pada tiap item langsung membuka Cek Promo untuk item itu.
 - Di Cek Promo ada tombol 📷 untuk scan barcode, dan kartu item menampilkan **Sample pajangan** (lokasi sample bila ada).
+- **Update data promo tanpa deploy dan tanpa token:** login admin, klik **Import data baru** dan pilih file promo terbaru. Setelah selesai, jawab **OK** pada pertanyaan *Simpan data ini ke server*. (Atau klik **Simpan ke server** kapan saja.) Semua pengguna langsung memakai data itu. Batas ukuran sekitar 5 MB; bila lebih besar gunakan Export data.json di bawah.
 - Data promo bawaan ada di `public/data/promo-data.txt`. Untuk memperbarui data bagi **semua pengguna**: login admin, import laporan promo terbaru, klik **Export data.json**, simpan sebagai `public/data.json` di repo, lalu commit. Netlify akan deploy ulang. Import tanpa export hanya tersimpan di browser yang dipakai.
 
 ---
@@ -131,3 +132,53 @@ Di tab **Cek Promo** (setelah login) ada panel **Update Promo Harian**. Data ter
 **Petugas (staff)**: hanya melihat tugas miliknya, dapat membuka daftar barang, lalu mengubah status (Belum, Proses, Selesai, Kendala) dan mengisi catatan.
 
 Halaman menyegarkan data tiap 1 menit. Setelah update ini, semua pengguna perlu login ulang di tab Cek Promo satu kali.
+
+---
+
+## Tanpa token: cara memperbarui website
+
+Pembaruan **data** (stok, promo, sample, tugas) dilakukan dari dalam website dan **tidak memerlukan deploy maupun token**.
+
+Token hanya terasa perlu saat mengubah **kode** (jarang), terutama bila memakai Netlify CLI atau `git push`. Hindari itu dengan cara berikut:
+1. Hubungkan repo GitHub ke Netlify sekali saja (Cara A).
+2. Untuk mengganti file kode, buka repo di **github.com** lewat browser, masuk ke folder file yang diganti, klik **Add file → Upload files**, tarik file barunya, lalu **Commit changes**. Cukup login GitHub, tanpa token.
+3. Netlify otomatis deploy ulang dalam 1–2 menit.
+
+Jangan memakai drag & drop folder di Netlify Drop, karena fungsi server tidak berjalan.
+
+---
+
+## Semua item tampil
+
+- **Monitoring sample**: menampilkan semua item Flooring and Wall dari laporan toko (keramik, granit, vinyl, wood flooring, mosaic, dan lainnya) ditambah item yang **hanya ada di DC** (kategori "DC SAJA"). Gunakan dropdown kategori untuk menyaring.
+- Item tanpa sample dengan stok toko di bawah 10 dan DC punya satu production no minimal 100 berstatus **Request stock (belum ada sample)**.
+- **Cek Promo**: hasil pencarian barang menampilkan semua hasil (tombol *Tampilkan 200 lagi*), bukan hanya 60 baris pertama.
+
+## Monitor Perubahan Promo
+
+Di tab Promo, sub-menu **📆 Monitor Perubahan**:
+1. Pilih tanggal (atau tombol ◀ ▶ / Hari ini) dan jenis perubahan: **Mulai berlaku**, **Berakhir**.
+2. Semua barang yang promonya berubah pada tanggal itu ditampilkan, lengkap dengan kategori, brand, promo, dan jenis perubahannya.
+3. Tandai progres per barang (Belum, Proses, Sudah, Kendala) lewat dropdown, atau centang banyak barang / pakai *Semua yang tampil* untuk menandai sekaligus.
+4. Ringkasan progress total dan per kategori terlihat di atas, ada filter status/kategori/pencarian, dan Export CSV.
+
+Progres tersimpan di server (`promoprogress.mjs`) per tanggal sehingga semua pengguna melihat hal yang sama dan siapa yang menandai tercatat.
+
+## Promo yang tiba-tiba hilang atau berubah
+
+Setiap kali admin **Import data baru** di tab Promo, aplikasi membandingkan promo yang masih berlaku (belum berakhir) pada data sebelumnya dengan data baru:
+- **Hilang**: barang atau brand yang tadinya punya promo, tetapi sekarang tidak ada padahal promonya belum berakhir.
+- **Diskon berubah**: nilai promo (diskon, harga, atau qty) berbeda.
+- **Baru**: promo yang sebelumnya tidak ada.
+
+Jawab **OK** pada pertanyaan *Simpan data ini ke server* agar hasil perbandingan tersimpan (maksimal 40 hasil import terakhir). Lihat di **📆 Monitor Perubahan** dengan Sumber **Promo hilang/berubah setelah import data**, pilih hasil import, filter jenisnya, lalu tandai progres per barang (Belum, Proses, Sudah, Kendala) seperti biasa.
+
+Catatan: perbandingan memakai data yang sedang dimuat di browser admin sebagai pembanding, yaitu data server terakhir kecuali ada import lokal yang lebih baru. Karena itu import berikutnya sebaiknya dilakukan setelah halaman memuat data server.
+
+---
+
+## Versi website
+
+Di bawah judul halaman tampil **nomor versi**, **tanggal pembaruan**, dan **waktu deploy terakhir**, serta tombol **Riwayat perubahan**.
+- Nomor versi, tanggal, dan catatan perubahan di `public/version.js` diisi oleh Claude pada setiap pembaruan, jadi tidak perlu diedit manual.
+- **Waktu deploy terakhir** dibuat otomatis oleh Netlify setiap deploy (lewat `scripts/stamp.mjs` yang dijalankan dari `netlify.toml`), tanpa campur tangan siapa pun.

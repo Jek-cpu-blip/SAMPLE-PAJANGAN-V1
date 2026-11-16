@@ -12,6 +12,8 @@ const st=p=>{const t=$('dt').value;return t<p[2]?'n':t>p[3]?'x':'a'};
 const bd=p=>{const s=st(p);return `<span class="b ${s}">${{a:'Aktif',n:'Belum mulai',x:'Berakhir'}[s]}</span>`};
 const per=p=>p[2].slice(8)+'/'+p[2].slice(5,7)+'/'+p[2].slice(2,4)+' – '+p[3].slice(8)+'/'+p[3].slice(5,7)+'/'+p[3].slice(2,4);
 const pn=p=>`${esc(p[1])} <div class="muted">${p[0]} · ${per(p)}</div>`;
+let LR=[],RLIM=100;
+function listR(){const r=LR;$('out').innerHTML=`<div class="panel"><h2>Pilih barang<small>${r.length>5000?'5000+':r.length} hasil</small></h2><div class="tw"><table class="list"><thead><tr><th>No Item</th><th>Barcode</th><th>Description</th><th>Brand</th><th>Brand Code</th></tr></thead><tbody>${r.slice(0,RLIM).map(i=>`<tr tabindex="0" data-n="${i[0]}"><td>${i[0]}</td><td>${i[1]||'-'}</td><td>${esc(i[2])}</td><td>${esc(i[4])}</td><td>${i[3]||'-'}</td></tr>`).join('')}</tbody></table></div>${r.length>RLIM?`<div class="muted" style="margin-top:8px">Menampilkan ${RLIM} dari ${r.length}. <button class="btn fb" data-more="1">Tampilkan 200 lagi</button></div>`:''}</div>`}
 function search(){
  if(!D)return;
  const g=id=>$(id).value.trim().toLowerCase(),m=g('fm'),b=g('fb'),c=g('fc'),n=g('fn'),d=g('fd').split(/\s+/).filter(Boolean);
@@ -23,15 +25,15 @@ function search(){
   if(b&&!i[4].toLowerCase().includes(b))continue;
   if(c&&i[3].toLowerCase()!==c)continue;
   if(d.length&&!d.every(t=>i.l.includes(t)))continue;
-  r.push(i);if(r.length>400)break;
+  r.push(i);if(r.length>5000)break;
  }
  const ex=n&&r.find(i=>i[0].toLowerCase()===n||i[1]===n);
  if(ex||r.length===1){show(ex||r[0]);return}
  sel=null;
  if(!r.length){$('out').innerHTML='<div class="hint panel">Tidak ada barang yang cocok. Cek ejaan atau kurangi kata kunci.</div>';return}
- $('out').innerHTML=`<div class="panel"><h2>Pilih barang<small>${r.length>400?'400+':r.length} hasil${r.length>60?', 60 pertama ditampilkan':''}</small></h2><div class="tw"><table class="list"><thead><tr><th>No Item</th><th>Barcode</th><th>Description</th><th>Brand</th><th>Brand Code</th></tr></thead><tbody>${r.slice(0,60).map(i=>`<tr tabindex="0" data-n="${i[0]}"><td>${i[0]}</td><td>${i[1]||'-'}</td><td>${esc(i[2])}</td><td>${esc(i[4])}</td><td>${i[3]||'-'}</td></tr>`).join('')}</tbody></table></div></div>`;
+ LR=r;RLIM=100;listR();
 }
-$('out').addEventListener('click',e=>{const t=e.target.closest('tr[data-n]');if(t)show(D.items.find(i=>i[0]===t.dataset.n))});
+$('out').addEventListener('click',e=>{if(e.target.dataset.more){RLIM+=200;listR();return}const t=e.target.closest('tr[data-n]');if(t)show(D.items.find(i=>i[0]===t.dataset.n))});
 $('out').addEventListener('keydown',e=>{if(e.key==='Enter'){const t=e.target.closest('tr[data-n]');if(t)show(D.items.find(i=>i[0]===t.dataset.n))}});
 let tm;['fm','fb','fc','fn','fd'].forEach(id=>$(id).addEventListener('input',()=>{clearTimeout(tm);tm=setTimeout(search,220)}));
 $('fn').addEventListener('keydown',e=>{if(e.key==='Enter'){clearTimeout(tm);search()}});
@@ -67,13 +69,14 @@ function show(it,keep){
   if(ben.length)tb.push(`<tr><td>${pn(p)}</td><td class="num">${rp(step)}</td><td>${ben.slice(0,8).map(x=>`${esc(x[2])} <b>${rp(x[3])}</b>`).join('<br>')}${ben.length>8?`<br><span class="muted">+${ben.length-8} lainnya</span>`:''}</td><td>${bd(p)}</td></tr>`)}
  const nAct=cand.filter(c=>c.act&&c.k!=='normal').length;
  const hidN=(()=>{let n=0;for(const r of ip)if(st(P[r[1]])!=='a')n++;for(const r of bp)if(st(P[r[1]])!=='a')n++;return n})();
+ const noA=(!nAct&&hidN&&!all)?`<div class="vd warn">Tidak ada promo aktif pada ${esc($('dt').value)}. Ada ${hidN} promo tidak aktif (sudah berakhir atau belum mulai) yang disembunyikan. Centang "Tampilkan promo tidak aktif" untuk melihatnya. Kalau seharusnya ada promo baru, import data promo terbaru dulu.</div>`:'';
  const noP=!np?`<div class="vd warn" style="margin:0 0 12px">Harga normal belum ada di file promo untuk item ini (item hanya kena promo brand / tidak ada di laporan promo). Isi harga normal manual: <input type="number" id="man" style="width:160px;margin-left:6px" value="${manual||''}" placeholder="Rp"></div>`:'';
  $('out').innerHTML=`<div class="panel"><div class="info">
  <div><div class="k">Master Brand</div><div class="v">${esc(it[5])||'-'}</div></div><div><div class="k">Brand</div><div class="v">${esc(it[4])||'-'}</div></div>
  <div><div class="k">Brand Code</div><div class="v">${it[3]||'-'}</div></div><div><div class="k">No Item</div><div class="v">${no}</div></div>
  <div><div class="k">Barcode</div><div class="v">${it[1]||'-'}</div></div><div><div class="k">Stok saat ini</div>${skH(no)}</div><div><div class="k">Harga normal (inc)</div><div class="v">${rp(np)}</div></div><div><div class="k">Sample pajangan</div><div class="v" style="font-size:15px">${sampleTxt(no)}</div></div><div><div class="k">Promo aktif</div><div class="v">${nAct}</div></div></div>
  <div class="k muted" style="margin-top:12px">Description</div><div class="desc">${esc(it[2])}</div>${it[3]?'':'<div class="muted" style="margin-top:6px">Item ini tidak ada di All Active Item, jadi promo brand tidak bisa dicocokkan.</div>'}</div>
- <div class="panel"><h2>Cek POP</h2><div class="bar" style="margin:0 0 10px"><label>Jenis temuan <select id="rs">${RSN.map(r=>`<option${r===rsel?' selected':''}>${r}</option>`).join('')}</select></label><label>Tugaskan ke <select id="as0">${asOpts(asel)}</select></label><button class="btn" id="xi">Export Excel</button><span>Jika POP belum terpasang atau salah, klik “+ Temuan” pada promo yang seharusnya terpasang.</span></div>${noP}<div class="pop"><div><label class="k" for="pp">Harga di POP (Rp)</label><input type="number" id="pp" value="${popP}" placeholder="mis. 129000"></div><div><label class="k" for="pd">Diskon di POP (%) – opsional</label><input type="number" id="pd" value="${popD}" step="any" placeholder="mis. 10"></div></div><div id="vd"></div></div>
+ <div class="panel"><h2>Cek POP</h2><div class="bar" style="margin:0 0 10px"><label>Jenis temuan <select id="rs">${RSN.map(r=>`<option${r===rsel?' selected':''}>${r}</option>`).join('')}</select></label><label>Tugaskan ke <select id="as0">${asOpts(asel)}</select></label><button class="btn" id="xi">Export Excel</button><span>Jika POP belum terpasang atau salah, klik “+ Temuan” pada promo yang seharusnya terpasang.</span></div>${noA}${noP}<div class="pop"><div><label class="k" for="pp">Harga di POP (Rp)</label><input type="number" id="pp" value="${popP}" placeholder="mis. 129000"></div><div><label class="k" for="pd">Diskon di POP (%) – opsional</label><input type="number" id="pd" value="${popD}" step="any" placeholder="mis. 10"></div></div><div id="vd"></div></div>
  ${sec('Promo Discount','harga promo item',tbl(['Promo','Disc','Harga normal','Harga promo','POP/sign di sistem','Status'],dRows))}
  ${sec('Disc by Brand','dicocokkan lewat Brand Code '+(it[3]||'-'),tbl(['Promo','Sumber','Brand Code','Disc','Harga setelah disc','Status'],bRows,it[3]?'Tidak ada promo untuk brand code ini.':'Brand code tidak diketahui.'))}
  ${sec('Mix &amp; Match','',tbl(['Promo','Line Group','Disc','Item dibutuhkan','Harga promo','POP/sign di sistem','Status'],mRows))}
@@ -110,10 +113,30 @@ function verdict(cand,iAct,bAct){
 /* ===== penyimpanan data (IndexedDB) ===== */
 const srcTxt=()=>'Sumber: '+D.meta+(D.localAt?' · hanya di perangkat ini':D.built?' · data situs per '+new Date(D.built).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):'')+(D.si?' · Stok IMR '+D.si.date+(D.si.loc?' ('+D.si.loc.replace(/^\d+ - /,'')+')':''):'');
 const idb=(m,v)=>new Promise((ok,no)=>{try{const q=indexedDB.open('cekpromo',1);q.onupgradeneeded=()=>q.result.createObjectStore('k');q.onerror=()=>no(q.error);q.onsuccess=()=>{const t=q.result.transaction('k',m==='get'?'readonly':'readwrite'),s=t.objectStore('k'),r=m==='get'?s.get('data'):m==='put'?s.put(v,'data'):s.delete('data');t.oncomplete=()=>ok(r.result);t.onerror=()=>no(t.error)}}catch(e){no(e)}});
+async function gunzipB64(b){const bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);try{return await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text()}catch(e){return pako.inflate(u,{to:'string'})}}
+async function gzipB64(txt){let u;try{u=new Uint8Array(await new Response(new Blob([txt]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer())}catch(e){u=pako.gzip(txt)}let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)}
+async function pushServer(){const gz=await gzipB64(JSON.stringify(D));const r=await fetch('/api/promodata',{method:'POST',headers:{'content-type':'application/json','x-cp-user':USER,'x-cp-hash':CPH},body:JSON.stringify({gz})});if(!r.ok){let m='';try{m=(await r.json()).error}catch(e){}throw new Error(m||('Server error '+r.status))}return gz.length}
+/* ===== deteksi promo yang hilang / berubah setelah import ===== */
+function snap(){const m=new Map(),ok=pi=>{const p=D.promos[pi];return p&&p[3]>=today};
+ for(const no in D.ip)for(const r of D.ip[no])if(ok(r[1]))m.set(no+'|'+D.promos[r[1]][0]+'|'+r[0],r[2]);
+ for(const b in D.bp)for(const r of D.bp[b])if(ok(r[1]))m.set('B'+b+'|'+D.promos[r[1]][0]+'|'+r[0],r[2]);
+ return m}
+function diffRows(a,b){const pi=new Map(),im=new Map(),bn=new Map(),bc=new Map();
+ D.promos.forEach(p=>{const o=pi.get(p[0]);if(!o||p[3]>o[3])pi.set(p[0],p)});
+ D.items.forEach(i=>{im.set(i[0],i);if(i[3]){if(!bn.has(i[3]))bn.set(i[3],i[4]);bc.set(i[3],(bc.get(i[3])||0)+1)}});
+ const L=[],C=[],A=[],mk=(t,k,o,n)=>{const q=k.split('|'),no=q[0],pn=q[1],ty=q[2],p=pi.get(pn)||[],br=no[0]==='B';let nm,cat,bd;
+  if(br){const c=no.slice(1);nm=(bn.get(c)||'')+' ('+(bc.get(c)||0)+' barang)';cat='BRAND';bd=bn.get(c)||c}else{const it=im.get(no);nm=it?it[2]:'';cat=it?(D.cats[it[6]]||'LAINNYA'):'';bd=it?it[4]:''}
+  return [t,br?'Brand '+no.slice(1):no,nm,cat,bd,pn,p[1]||'',p[3]||'',o,n,ty]};
+ for(const [k,v] of a){if(!b.has(k))L.push(mk('L',k,v,null));else if(b.get(k)!==v)C.push(mk('C',k,v,b.get(k)))}
+ for(const [k,v] of b)if(!a.has(k))A.push(mk('A',k,null,v));
+ const cut=L.length+C.length>25000||A.length>3000,rows=L.slice(0,25000).concat(C.slice(0,Math.max(0,25000-L.length)),A.slice(0,3000));
+ return{rows,sum:{l:L.length,c:C.length,a:A.length,cut}}}
+async function pushChanges(CHG){const r=await fetch('/api/promochanges',{method:'POST',headers:{'content-type':'application/json','x-cp-user':USER,'x-cp-hash':CPH},body:JSON.stringify(CHG)});if(!r.ok){let m='';try{m=(await r.json()).error}catch(e){}throw new Error(m||('Server error '+r.status))}}
 async function load(fresh){
  let sv=null;if(!fresh){try{sv=await idb('get')}catch(e){}}
+ let ssv=null;if(USER&&CPH){try{const rr=await fetch('/api/promodata',{headers:{'x-cp-user':USER,'x-cp-hash':CPH},cache:'no-store'});if(rr.ok){const j=await rr.json(),d=JSON.parse(await gunzipB64(j.gz));if(d&&d.items&&d.v===3)ssv={at:j.at,D:d}}}catch(e){}}
  let srv=null;try{const rr=await fetch('data.json',{cache:'no-cache'});if(rr.ok){srv=await rr.json();if(!srv.items||srv.v!==3)srv=null}}catch(e){}
- if(sv&&sv.items&&sv.v===3&&sv.localAt&&(!srv||sv.localAt>(srv.built||'')))D=sv;else if(srv){D=srv;D.meta=D.meta||'Data situs'}else{
+ if(sv&&sv.items&&sv.v===3&&sv.localAt&&(!srv||sv.localAt>(srv.built||''))&&(!ssv||sv.localAt>ssv.at))D=sv;else if(ssv){D=ssv.D;D.meta='Data server '+new Date(ssv.at).toLocaleString('id-ID')}else if(srv){D=srv;D.meta=D.meta||'Data situs'}else{
   if(!DATA)DATA=(await (await fetch('/data/promo-data.txt')).text()).trim();const b=atob(DATA),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);
   let tx;try{tx=await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text()}catch(e){tx=pako.inflate(u,{to:'string'})}
   D=JSON.parse(tx);D.meta='Data bawaan';
@@ -132,7 +155,7 @@ function applyFile(k,rows){
  const hr=rows.findIndex((r,i)=>i<15&&r&&(r.includes('Starting Date')||r.includes('Item No')||r.includes('No Item')));const H={};
  rows[hr].forEach((h,i)=>{h=String(h==null?'':h).trim();if(h&&!(h in H))H[h]=i});
  const body=rows.slice(hr+1).filter(r=>r&&r.some(v=>v!=null));
- const g=(r,c)=>{const v=r[H[c]];return v==null?'':String(v).trim()},nv=(r,c)=>{const v=parseFloat(r[H[c]]);return isNaN(v)?0:v};
+ const g=(r,c)=>{const v=r[H[c]];let x=v==null?'':String(v).trim();if((c==='Item No'||c==='No Item')&&/^\d{9}$/.test(x))x='0'+x;return x},nv=(r,c)=>{const v=parseFloat(r[H[c]]);return isNaN(v)?0:v};
  const dt=(r,c)=>{const v=r[H[c]];if(typeof v==='number')return new Date(Math.round((v-25569)*864e5)).toISOString().slice(0,10);const s=String(v||'');return/^\d\d\/\d\d\/\d{4}/.test(s)?s.slice(6,10)+'-'+s.slice(3,5)+'-'+s.slice(0,2):s.slice(0,10)};
  const ci=c=>{let i=D.cats.indexOf(c);if(i<0){D.cats.push(c);i=D.cats.length-1}return i};
  if(k==='S'){const c=Object.keys(H).find(x=>/ending balance|current stok|^stok$|^stock$/i.test(x)),ic=H['No Item']!=null?'No Item':'Item No',m={};
@@ -173,13 +196,14 @@ const KN={S:'Laporan Stok',I:'All Active Item',D:'Promo Discount',M:'Mix & Match
 $('imp').addEventListener('change',async e=>{
  const fs=[...e.target.files];e.target.value='';if(!fs.length)return;
  if(!window.XLSX){alert('Library Excel gagal dimuat (cek koneksi).');return}
- const ok=[],bad=[];
+ const ok=[],bad=[],SB=snap();
  for(const f of fs){$('stat').textContent='Membaca '+f.name+'…';await new Promise(r=>setTimeout(r,30));
   try{const wb=XLSX.read(await f.arrayBuffer(),{type:'array'}),rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true,defval:null}),k=detect(wb.SheetNames[0],rows);
    if(!k){bad.push(f.name);continue}ok.push(KN[k]+' ('+applyFile(k,rows).toLocaleString('id-ID')+' baris)')}catch(x){bad.push(f.name)}}
  if(ok.length){D.localAt=new Date().toISOString();D.meta='Import '+new Date().toLocaleString('id-ID')+' – '+ok.map(s=>s.split(' (')[0]).join(', ');try{await idb('put',D)}catch(x){}}
- normBrand();D.items.forEach(i=>{i.l=i[2].toLowerCase()});sel=null;$('stat').textContent=D.items.length.toLocaleString('id-ID')+' item dimuat';$('src').textContent=srcTxt();search();
- alert((ok.length?'Berhasil diimpor:\n'+ok.join('\n'):'Tidak ada file yang berhasil diimpor.')+(bad.length?'\n\nTidak dikenali: '+bad.join(', '):''));
+ normBrand();D.items.forEach(i=>{i.l=i[2].toLowerCase()});sel=null;let CHG=null;if(ok.length){try{CHG=diffRows(SB,snap())}catch(x){}}$('stat').textContent=D.items.length.toLocaleString('id-ID')+' item dimuat';$('src').textContent=srcTxt();search();
+ alert((ok.length?'Berhasil diimpor:\n'+ok.join('\n'):'Tidak ada file yang berhasil diimpor.')+(bad.length?'\n\nTidak dikenali: '+bad.join(', '):'')+(CHG?'\n\nDibanding data sebelumnya: '+CHG.sum.l+' promo-barang hilang, '+CHG.sum.c+' berubah, '+CHG.sum.a+' baru.':''));
+ if(ok.length&&confirm('Simpan data ini ke server supaya semua pengguna memakai data yang sama?')){try{const n=await pushServer();let cm='';if(CHG&&CHG.rows.length){try{await pushChanges(CHG)}catch(x){cm='\n\nDaftar perubahan gagal disimpan: '+x.message}}alert('Tersimpan di server ('+(n/1048576).toFixed(1)+' MB). Semua pengguna akan memakai data ini.'+(CHG&&CHG.rows.length&&!cm?'\nDaftar promo hilang/berubah ada di Monitor Perubahan (sumber: Promo hilang/berubah setelah import data).':'')+cm)}catch(x){alert('Gagal menyimpan ke server: '+x.message+'\nGunakan Export data.json sebagai cadangan.')}}
 });
 $('rst').addEventListener('click',async()=>{if(!confirm('Kembali ke data situs? Data hasil import di perangkat ini akan dihapus (daftar temuan tetap aman).'))return;try{await idb('del')}catch(x){}await load(true);sel=null;search()});
 /* ===== simpan / export file ===== */
@@ -203,6 +227,7 @@ async function exItem(){
 }
 async function exData(){if(!confirm('Buat file data.json dari data yang sedang tampil? Unggah file ini ke Netlify (bersama index.html) agar semua orang memakai data yang sama.'))return;const c=Object.assign({},D,{built:new Date().toISOString()});delete c.localAt;await saveFile('data.json',JSON.stringify(c))}
 $('exd').addEventListener('click',exData);
+$('svr').addEventListener('click',async()=>{if(!D){alert('Data belum termuat.');return}if(!confirm('Simpan data promo yang sedang tampil ke server untuk semua pengguna?'))return;try{const n=await pushServer();alert('Tersimpan di server ('+(n/1048576).toFixed(1)+' MB).')}catch(x){alert('Gagal: '+x.message)}});
 /* ===== daftar temuan POP ===== */
 const STS=['Belum diproses','Sedang dipasang','Sudah dipasang'],RSN=['Belum terpasang','Harga salah','Promo salah'];
 let FIND=[],FR=[],rsel=RSN[0],ffl='open',afl='all',asel='';
@@ -281,7 +306,7 @@ $('lbd').onclick=async()=>{if(!LB)return;const d=PH.get(LB.k)||await fget(LB.k),
 const STAFF=Object.keys(USERS).filter(u=>USERS[u][1]==='staff'),asOpts=(v)=>'<option value="">— Belum ditugaskan —</option>'+STAFF.map(u=>`<option${u===v?' selected':''}>${u}</option>`).join('');
 function enter(u){USER=u;ROLE=USERS[u][1];const PR=document.getElementById('pr');PR.classList.add('in');PR.classList.toggle('staff',ROLE==='staff');psub(ROLE==='admin'?'adm':'ut');
  $('who').innerHTML='<b>'+esc(u)+'</b> · '+(ROLE==='admin'?'Admin':'Staff');try{sessionStorage.setItem('cp_user',u)}catch(e){}
- rf();utInit();if(ROLE==='admin'&&!booted){booted=true;load().then(search).catch(e=>{$('stat').textContent='Gagal memuat data: '+e.message})}if(PENDING){const c=PENDING;PENDING='';setTimeout(()=>runFind(c),50)}}
+ rf();utInit();mInit();if(ROLE==='admin'&&!booted){booted=true;load().then(search).catch(e=>{$('stat').textContent='Gagal memuat data: '+e.message})}if(PENDING){const c=PENDING;PENDING='';setTimeout(()=>runFind(c),50)}}
 function doLogin(){const u=$('lu').value.trim().toLowerCase(),p=$('lp').value,e=USERS[u];
  const hh=e?sha256(SALT+u+':'+p):'';if(e&&hh===e[0]){CPH=hh;try{sessionStorage.setItem('cp_h',hh)}catch(x){}$('le').hidden=true;$('lp').value='';enter(u)}else{$('le').hidden=false;$('le').textContent='Username atau password salah.'}}
 $('lgb').addEventListener('click',doLogin);['lu','lp'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()}));
@@ -386,7 +411,7 @@ setInterval(()=>{const a=document.activeElement;if(USER&&!document.hidden&&!(a&&
 /* ===== integrasi dengan halaman utama ===== */
 let PENDING='';
 const sampleTxt=no=>{const l=window.sampleOf&&window.sampleOf(no);return l&&l.length?l.map(esc).join('<br>'):'<span class="muted">Belum ada sample</span>'};
-function psub(v){document.querySelectorAll('#pr .pv').forEach(e=>e.classList.toggle('on',e.id===v));document.querySelectorAll('#psn .chip').forEach(b=>b.classList.toggle('on',b.dataset.p===v))}
+function psub(v){if(v==='mp'&&typeof mLoadOnce==='function')mLoadOnce();document.querySelectorAll('#pr .pv').forEach(e=>e.classList.toggle('on',e.id===v));document.querySelectorAll('#psn .chip').forEach(b=>b.classList.toggle('on',b.dataset.p===v))}
 $('psn').addEventListener('click',e=>{const b=e.target.closest('.chip');if(b)psub(b.dataset.p)});
 async function runFind(code){psub('adm');if(!D){try{await load()}catch(e){}}$('fn').value=code;search()}
 window.PROMO={find(code){if(!code)return;if(!USER){PENDING=code;return}if(ROLE!=='admin'){psub('ut');return}runFind(code)}};
@@ -394,6 +419,87 @@ let PSC=null;
 function pscanStop(){if(PSC){PSC.stop().catch(()=>{});PSC=null}$('scm').hidden=true}
 $('pscan').addEventListener('click',async()=>{$('scm').hidden=false;try{PSC=new Html5Qrcode('pread');await PSC.start({facingMode:'environment'},{fps:10,qrbox:{width:260,height:140}},t=>{$('fn').value=t;pscanStop();$('fn').dispatchEvent(new Event('input'));if(navigator.vibrate)navigator.vibrate(80)},()=>{})}catch(e){pscanStop();alert('Kamera tidak bisa dibuka. Izinkan akses kamera di browser.')}});
 $('scx').addEventListener('click',pscanStop);
+
+/* ===== Diagnosa data promo: promo / brand yang tidak terhubung ke barang ===== */
+function diag(){if(!D){alert('Data promo belum termuat.');return}
+ const P=D.promos,codes=new Set();let nob=0;D.items.forEach(i=>{if(i[3])codes.add(i[3]);else nob++});
+ const ref=new Array(P.length).fill(0);
+ for(const k in D.ip)D.ip[k].forEach(r=>{ref[r[1]]++});
+ for(const k in D.bp)if(codes.has(k))D.bp[k].forEach(r=>{ref[r[1]]++});
+ for(const k in D.tab)ref[+k]++;
+ const orph=P.map((p,i)=>[p,i]).filter(x=>!ref[x[1]]),bk=Object.keys(D.bp).filter(k=>!codes.has(k));
+ const act=P.filter(p=>st(p)==='a').length,ended=P.filter(p=>p[3]<$('dt').value).length,last=P.reduce((a,p)=>p[2]>a?p[2]:a,'');
+ const kp=(l,v,c)=>`<div><div class="k">${l}</div><div class="v"${c?` style="color:var(--${c})"`:''}>${v}</div></div>`;
+ $('out').innerHTML=`<div class="panel"><h2>Diagnosa data promo <small>${esc($('src').textContent||'')}</small></h2><div class="info">${kp('Total promo',P.length)}${kp('Aktif pada '+$('dt').value,act,'ok')}${kp('Sudah berakhir',ended)}${kp('Promo mulai terbaru',last?last.slice(8)+'/'+last.slice(5,7)+'/'+last.slice(2,4):'-')}${kp('Promo tanpa barang',orph.length,orph.length?'bad':'ok')}${kp('Brand promo tanpa barang',bk.length,bk.length?'warn':'ok')}${kp('Barang tanpa brand code',nob,nob?'warn':'ok')}${kp('Total barang',D.items.length)}</div>
+ <div class="muted" style="margin-top:10px">Promo tanpa barang = promo yang tidak menempel ke barang mana pun. Brand promo tanpa barang = kode brand di file promo yang tidak ada di daftar barang. Barang tanpa brand code tidak bisa menerima promo brand.</div></div>
+ <div class="panel"><h2>Promo tanpa barang</h2>${tbl(['Promo','Periode','Jenis'],orph.slice(0,200).map(x=>`<tr><td>${pn(x[0])}</td><td>${per(x[0])}</td><td>${x[0][4]}</td></tr>`),'Semua promo terhubung ke barang.',1)}</div>
+ <div class="panel"><h2>Kode brand di promo yang tidak ada barangnya</h2>${tbl(['Kode brand','Promo','Disc'],bk.slice(0,200).map(k=>`<tr><td>${esc(k)}</td><td>${D.bp[k].map(r=>esc(P[r[1]][1])).slice(0,3).join('<br>')}</td><td class="num">${D.bp[k].map(r=>pc(r[2])).slice(0,3).join('<br>')}</td></tr>`),'Semua kode brand punya barang.',1)}</div>`}
+$('dgn').addEventListener('click',diag);
+
+/* ===== Monitor Perubahan Promo: cek per tanggal apakah barang sudah diprogres promonya ===== */
+let MM='date',MB=[],MBID='',MPD='',MCF='all',MD=today,MT={s:true,e:true},MR=[],MP={},MF='all',MC='all',MQ='',ML=100,ME='',MSEL=new Set(),MLOADED=false;
+const MS={B:'Belum',P:'Proses',S:'Sudah',K:'Kendala'};
+async function mapi(method,q,body,base){const r=await fetch((base||'/api/promoprogress')+(q||''),{method,headers:{'content-type':'application/json','x-cp-user':USER,'x-cp-hash':CPH},body:body?JSON.stringify(body):undefined});if(!r.ok){let m='';try{m=(await r.json()).error}catch(e){}throw new Error(m||('Server error '+r.status))}return r.json()}
+const mst=r=>(MP[r.k]||['B'])[0];
+const pdt=()=>MM==='chg'?MPD:MD;
+const cv=w=>{const[t,no,n,cat,br,pn,pname,end,o,nw,ty]=w,f=v=>v==null?'-':String(v);return{k:t+'|'+no+'|'+pn+'|'+ty,no,n,cat,br,pn,pname,w:{L:'Hilang',C:'Diskon berubah',A:'Baru'}[t],t:ty,disc:0,dtxt:t==='L'?'sebelumnya '+f(o)+(end?' · berlaku s/d '+end.slice(8)+'/'+end.slice(5,7):''):t==='C'?f(o)+' → '+f(nw):'nilai '+f(nw)}};
+function mRows(){const tg=new Map();D.promos.forEach((p,i)=>{const w=[];if(MT.s&&p[2]===MD)w.push('Mulai');if(MT.e&&p[3]===MD)w.push('Berakhir');if(w.length)tg.set(i,w.join(' & '))});
+ const out=[];if(!tg.size)return out;
+ for(const it of D.items){const cat=D.cats[it[6]]||'LAINNYA',seen=new Set();
+  const add=r=>{if(!tg.has(r[1])||seen.has(r[1]))return;seen.add(r[1]);const p=D.promos[r[1]];out.push({k:it[0]+'|'+p[0],no:it[0],n:it[2],cat,br:it[4],pn:p[0],pname:p[1],w:tg.get(r[1]),t:r[0],disc:r[2]})};
+  (D.ip[it[0]]||[]).forEach(add);if(it[3])(D.bp[it[3]]||[]).forEach(add)}
+ for(const k in D.tab){if(!tg.has(+k))continue;const p=D.promos[+k];D.tab[k][1].forEach(x=>{out.push({k:x[1]+'|'+p[0],no:x[1],n:x[2],cat:x[0]||TBC,br:'',pn:p[0],pname:p[1],w:tg.get(+k),t:'T',disc:0})})}
+ return out}
+function mInit(){if(!$('mp'))return;
+ $('mp').innerHTML=`<div class="panel"><h2>Monitor Perubahan Promo<small id="msh"></small></h2>
+ <div class="muted" style="margin-bottom:8px">Pilih tanggal untuk melihat semua barang yang promonya berubah (mulai atau berakhir) pada tanggal itu, lalu tandai barang yang sudah diprogres.</div>
+ <div class="bar" style="margin:0 0 10px"><label>Sumber <select id="mmode"><option value="date">Promo mulai/berakhir pada tanggal</option><option value="chg">Promo hilang/berubah setelah import data</option></select></label></div>
+ <div class="bar" style="margin:0 0 10px"><span id="mdw" style="display:contents"><button class="btn" data-ma="prev" aria-label="Hari sebelumnya">◀</button><label>Tanggal <input type="date" id="md" value="${MD}"></label><button class="btn" data-ma="next" aria-label="Hari berikutnya">▶</button><button class="btn" data-ma="today">Hari ini</button><label><input type="checkbox" id="mts" checked> Mulai berlaku</label><label><input type="checkbox" id="mte" checked> Berakhir</label></span><span id="mcw" hidden style="display:contents"><label>Hasil import <select id="mbsel"></select></label></span><button class="btn" data-ma="refresh">Muat ulang</button><button class="btn" data-ma="csv">Export CSV</button></div>
+ <div id="mbody"><div class="muted">Pilih tab ini untuk memuat data…</div></div></div>`}
+function mLoadOnce(){if(!MLOADED){MLOADED=true;mLoad()}}
+async function mLoad(){ME='';$('mbody')&&($('mbody').innerHTML='<div class="muted">Memuat…</div>');try{await ensureD();
+  if(MM==='chg'){MB=(await mapi('GET','?list=1',null,'/api/promochanges')).list||[];if(!MBID||!MB.some(x=>x.id===MBID))MBID=MB[0]?MB[0].id:'';if(MBID){const b=await mapi('GET','?id='+encodeURIComponent(MBID),null,'/api/promochanges');MR=b.rows.map(cv);MPD=b.at.slice(0,10)}else{MR=[];MPD=today}}
+  else MR=mRows();
+  MP=(await mapi('GET','?date='+pdt())).p||{}}catch(e){ME=e.message}MSEL=new Set();mRender()}
+function mRender(){if(!$('mbody'))return;
+ if(ME){$('mbody').innerHTML=`<div class="vd bad">${esc(ME)}${/server|404|500/i.test(ME)?'<br>Fitur ini butuh fungsi server Netlify (deploy folder lengkap).':''}</div>`;return}
+ const c={B:0,P:0,S:0,K:0};MR.forEach(r=>{c[mst(r)]++});const tot=MR.length,p=upct(c.S,tot);
+ $('msh').textContent=` ${tot} barang-promo · ${c.S} sudah (${p}%)`;if($('mdw')){$('mdw').hidden=MM==='chg';$('mcw').hidden=MM!=='chg'}
+ const cats=[...new Set(MR.map(r=>r.cat))].sort();
+ const L=MR.filter(r=>(MF==='all'||mst(r)===MF)&&(MC==='all'||r.cat===MC)&&(MM!=='chg'||MCF==='all'||r.w===MCF)&&(!MQ||(r.no+' '+r.n+' '+r.pn+' '+r.pname+' '+r.br).toLowerCase().includes(MQ)));
+ if($('mbsel')&&MM==='chg'){const h=MB.map(b=>`<option value="${b.id}"${b.id===MBID?' selected':''}>${new Date(b.at).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})} · ${sn(b.by)} · hilang ${b.l} / berubah ${b.c} / baru ${b.a}</option>`).join('')||'<option value="">Belum ada hasil import</option>';if($('mbsel').dataset.h!==h){$('mbsel').innerHTML=h;$('mbsel').dataset.h=h}}
+ const kp=(l,v,k)=>`<div><div class="k">${l}</div><div class="v"${k?` style="color:var(--${k})"`:''}>${v}</div></div>`;
+ const cr=cats.map(k=>{const x=MR.filter(r=>r.cat===k),s=x.filter(r=>mst(r)==='S').length;return `<tr><td>${esc(k)}</td><td class="num">${x.length}</td><td class="num">${s}</td><td class="num">${x.length-s}</td><td>${ubar(upct(s,x.length))}</td></tr>`});
+ const row=r=>{const s=mst(r),e=MP[r.k];return `<tr><td><input type="checkbox" class="mck" data-k="${esc(r.k)}"${MSEL.has(r.k)?' checked':''} aria-label="Pilih"></td><td>${esc(r.no)}<div class="muted">${esc(r.n)}</div></td><td>${esc(r.cat)}<div class="muted">${esc(r.br||'')}</div></td><td>${esc(r.pn)}<div class="muted">${esc(r.pname)}</div></td><td>${esc(r.w)}${r.dtxt?'<div class="muted">'+esc(r.dtxt)+'</div>':(r.disc?'<div class="muted">'+pc(r.disc)+'</div>':'')}</td><td><select class="mst" data-k="${esc(r.k)}">${Object.entries(MS).map(([v,t])=>`<option value="${v}"${v===s?' selected':''}>${t}</option>`).join('')}</select></td><td>${e?esc(sn(e[1]))+'<div class="muted">'+fmtT(e[2])+'</div>':'<span class="muted">-</span>'}</td></tr>`};
+ $('mbody').innerHTML=(tot?`<div class="info" style="margin-bottom:14px">${kp('Total barang-promo',tot)}${kp('Sudah diprogres',c.S,'ok')}${kp('Sedang diproses',c.P,'warn')}${kp('Kendala',c.K,'bad')}${kp('Belum diprogres',c.B,'bad')}${kp('Progress',p+'%')}</div>
+ <h2>Progress per kategori</h2>${tbl(['Kategori','Barang','Sudah','Belum','Progress'],cr,'',1).replace(/<th>(Barang|Sudah|Belum)</g,'<th class="num">$1<')}<h2 style="margin:14px 0 8px">Daftar barang</h2>`:'')+
+ `<div class="bar" style="margin:0 0 10px"><label>Status <select id="mf">${[['all','Semua'],...Object.entries(MS)].map(([v,t])=>`<option value="${v}"${v===MF?' selected':''}>${t}</option>`).join('')}</select></label><label>Kategori <select id="mc"><option value="all">Semua</option>${cats.map(k=>`<option${k===MC?' selected':''}>${esc(k)}</option>`).join('')}</select></label>${MM==='chg'?`<label>Jenis <select id="mtf">${[['all','Semua'],['Hilang','Hilang'],['Diskon berubah','Diskon berubah'],['Baru','Baru']].map(([v,t])=>`<option value="${v}"${v===MCF?' selected':''}>${t}</option>`).join('')}</select></label>`:''}<label>Cari <input type="text" id="mq" value="${esc(MQ)}" placeholder="item / promo / brand" style="width:170px"></label></div>`+
+ (tot?`<div class="bar" style="margin:0 0 10px"><label>Tandai sebagai <select id="mbs">${Object.entries(MS).map(([v,t])=>`<option value="${v}"${v==='S'?' selected':''}>${t}</option>`).join('')}</select></label><button class="btn" data-ma="bulk">Yang dicentang</button><button class="btn" data-ma="shown">Semua yang tampil (${L.length})</button></div>`:'')+
+ tbl(['<input type="checkbox" id="mca" aria-label="Pilih semua">','Barang','Kategori','Promo','Perubahan','Status progres','Update terakhir'],L.slice(0,ML).map(row),tot?'Tidak ada barang yang cocok dengan filter.':(MM==='chg'?'Belum ada hasil import yang tersimpan. Admin: import data promo baru lalu pilih simpan ke server.':'Tidak ada promo yang mulai atau berakhir pada tanggal ini.'),1)+(L.length>ML?`<div class="muted" style="margin-top:8px">Menampilkan ${ML} dari ${L.length}. <button class="btn fb" data-ma="more">Tampilkan 200 lagi</button></div>`:'')}
+async function mSet(keys,status){if(!keys.length){alert('Tidak ada barang yang dipilih.');return}
+ try{for(let i=0;i<keys.length;i+=5000)await mapi('POST','',{date:pdt(),keys:keys.slice(i,i+5000),status});const now=new Date().toISOString();keys.forEach(k=>{if(status==='B')delete MP[k];else MP[k]=[status,USER,now]});MSEL=new Set();mRender()}catch(e){alert('Gagal menyimpan: '+e.message);mLoad()}}
+const mDay=n=>{const d=new Date(MD+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};
+$('mp').addEventListener('click',async e=>{const a=e.target.dataset.ma;if(!a)return;
+ if(a==='prev'||a==='next'||a==='today'){MD=a==='prev'?mDay(-1):a==='next'?mDay(1):today;$('md').value=MD;ML=100;mLoad();return}
+ if(a==='refresh'){mLoad();return}
+ if(a==='more'){ML+=200;mRender();return}
+ if(a==='csv'){if(!MR.length){alert('Tidak ada data.');return}const cl=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';await saveFile('Monitor_Promo_'+pdt()+(MM==='chg'?'_hilang_berubah':'')+'.csv','\ufeff'+[['Tanggal','No Item','Nama Barang','Kategori','Brand','No Promo','Nama Promo','Perubahan','Status progres','Oleh','Waktu'].map(cl).join(','),...MR.map(r=>{const x=MP[r.k]||[];return [pdt(),r.no,r.n,r.cat,r.br,r.pn,r.pname,r.w+(r.dtxt?' ('+r.dtxt+')':''),MS[mst(r)],x[1]||'',x[2]||''].map(cl).join(',')})].join('\r\n'));return}
+ const st=$('mbs')&&$('mbs').value;
+ if(a==='bulk')await mSet([...MSEL],st);
+ if(a==='shown'){const L=MR.filter(r=>(MF==='all'||mst(r)===MF)&&(MC==='all'||r.cat===MC)&&(!MQ||(r.no+' '+r.n+' '+r.pn+' '+r.pname+' '+r.br).toLowerCase().includes(MQ)));if(L.length&&confirm('Tandai '+L.length+' barang sebagai '+MS[st]+'?'))await mSet(L.map(r=>r.k),st)}});
+$('mp').addEventListener('change',async e=>{const t=e.target;
+ if(t.id==='mmode'){MM=t.value;MF='all';MC='all';MCF='all';ML=100;mLoad();return}
+ if(t.id==='mbsel'){MBID=t.value;ML=100;mLoad();return}
+ if(t.id==='mtf'){MCF=t.value;ML=100;mRender();return}
+ if(t.id==='md'){if(t.value){MD=t.value;ML=100;mLoad()}return}
+ if(t.id==='mts'||t.id==='mte'){MT={s:$('mts').checked,e:$('mte').checked};ML=100;mLoad();return}
+ if(t.id==='mf'){MF=t.value;ML=100;mRender();return}
+ if(t.id==='mc'){MC=t.value;ML=100;mRender();return}
+ if(t.id==='mca'){document.querySelectorAll('#mp .mck').forEach(c=>{c.checked=t.checked;t.checked?MSEL.add(c.dataset.k):MSEL.delete(c.dataset.k)});return}
+ if(t.classList.contains('mck')){t.checked?MSEL.add(t.dataset.k):MSEL.delete(t.dataset.k);return}
+ if(t.classList.contains('mst'))await mSet([t.dataset.k],t.value)});
+let mtm;$('mp').addEventListener('input',e=>{if(e.target.id==='mq'){clearTimeout(mtm);mtm=setTimeout(()=>{MQ=e.target.value.trim().toLowerCase();ML=100;mRender();const q=$('mq');if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}},250)}});
+
 let su=null;try{su=sessionStorage.getItem('cp_user');CPH=sessionStorage.getItem('cp_h')||''}catch(e){}if(su&&USERS[su]&&CPH===USERS[su][0])enter(su);
 
 // integrasi: terima kode item dari tab Monitoring (hash atau postMessage)
