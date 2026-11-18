@@ -5,9 +5,16 @@
    Waktu deploy ditampilkan otomatis dari public/build.json yang dibuat
    Netlify saat build (scripts/stamp.mjs).
    ==================================================================== */
-const APP_VERSION = "1.0.1";
-const APP_DATE = "2026-11-16";
+const APP_VERSION = "1.1.0";
+const APP_DATE = "2026-11-18";
 const CHANGELOG = [
+  {
+    v: "1.1.0",
+    date: "2026-11-18",
+    items: [
+      "Monitoring sample: tombol Export Excel sesuai filter yang dipilih, berisi aksi yang harus dilakukan dan kolom progress (progress, PIC, tanggal selesai, catatan)",
+    ],
+  },
   {
     v: "1.0.1",
     date: "2026-11-16",
