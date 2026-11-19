@@ -1,4 +1,5 @@
 <!DOCTYPE html><html lang="id"><head><meta charset="utf-8">
+<meta name="color-scheme" content="light only">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Monitoring Sample Pajangan</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -7,9 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-:root{--bg:#f6f7f9;--card:#fff;--tx:#1b2330;--mu:#667085;--bd:#e1e5ea;--pr:#1d4ed8;--ok:#15803d;--okb:#dcfce7;--wn:#b45309;--wnb:#fef3c7;--er:#b91c1c;--erb:#fee2e2;--in:#1d4ed8;--inb:#dbeafe;--gr:#475467;--grb:#eceff3;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141b;--card:#18202a;--tx:#e8edf3;--mu:#98a2b3;--bd:#2a3441;--pr:#6b9bff;--ok:#4ade80;--okb:#12341f;--wn:#fbbf24;--wnb:#3a2c0b;--er:#f87171;--erb:#3d1717;--in:#7aa7ff;--inb:#172a52;--gr:#b4bdc9;--grb:#242d39;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0f141b;--card:#18202a;--tx:#e8edf3;--mu:#98a2b3;--bd:#2a3441;--pr:#6b9bff;--ok:#4ade80;--okb:#12341f;--wn:#fbbf24;--wnb:#3a2c0b;--er:#f87171;--erb:#3d1717;--in:#7aa7ff;--inb:#172a52;--gr:#b4bdc9;--grb:#242d39;color-scheme:dark}
+:root{--bg:#f6f7f9;--card:#fff;--tx:#1b2330;--mu:#667085;--bd:#e1e5ea;--pr:#1d4ed8;--ok:#15803d;--okb:#dcfce7;--wn:#b45309;--wnb:#fef3c7;--er:#b91c1c;--erb:#fee2e2;--in:#1d4ed8;--inb:#dbeafe;--gr:#475467;--grb:#eceff3;color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 header{padding:14px 16px 0;max-width:1100px;margin:auto}h1{font-size:19px;margin:0}.sub{color:var(--mu);font-size:13px}
@@ -60,6 +59,9 @@ main{padding:12px 12px 24px}input,select{font-size:16px;padding:12px}button.b{pa
 .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:10px}
 #pr{--ink:var(--tx);--mut:var(--mu);--line:var(--bd);--head:var(--grb);--acc:var(--pr);--bad:var(--er);--badb:var(--erb);--warn:var(--wn);--warnb:var(--wnb);--in:var(--bg)}
 [hidden]{display:none!important}
+#pr,#pr .panel,#pr h2,#pr summary,#pr .v,#pr td,#pr li{color:var(--tx)}
+#pr .muted,#pr .k,#pr h2 small,#pr .bar{color:var(--mu)}
+#pr .vd.ok{color:var(--ok)}#pr .vd.bad{color:var(--er)}#pr .vd.warn{color:var(--wn)}
 #pr:not(.in) .pgate{display:none}#pr.in #lg{display:none}#pr.staff #adm,#pr.staff .chip[data-p="adm"]{display:none!important}
 #pr .pv{display:none}#pr .pv.on{display:block}
 #pr label{display:inline;margin:0;font-size:inherit;color:inherit}
@@ -105,6 +107,7 @@ main{padding:12px 12px 24px}input,select{font-size:16px;padding:12px}button.b{pa
 #pr .lbc{max-width:100%;text-align:center}#lbi{max-width:100%;max-height:75vh;border-radius:4px}#pr .lbc .bar{justify-content:center}#lbm{color:#cfd5e3;margin-top:8px;font-size:13px}
 @media(max-width:820px){#pr .filters{grid-template-columns:1fr 1fr}#pr .desc{font-size:19px}#pr .info .v{font-size:18px}}
 @media(max-width:700px){#pr input,#pr select{font-size:16px}#pr .btn{padding:9px 12px}#pr .fb{padding:4px 10px}}
+.dr{padding:8px 10px;border:1px solid var(--bd);border-radius:8px;margin-top:6px;cursor:pointer;background:var(--bg)}.dr:hover{border-color:var(--pr)}
 </style></head><body>
 <header><div style="display:flex;align-items:center;gap:10px"><img src="/favicon.svg" width="40" height="40" alt="Logo Sample Pajangan" style="border-radius:10px;flex:none"><h1>Monitoring Sample Pajangan Keramik &amp; Granit</h1></div><div class="sub" id="meta"></div><div class="sub"><span id="sync"></span> <button class="chip" id="refresh" style="padding:3px 10px;margin-left:6px">⟳ Segarkan</button></div><div class="sub" id="ver"></div></header>
 <nav id="nav"><button data-t="in" class="on">➕ Input Sample</button><button data-t="mon">📊 Monitoring</button><button data-t="pr">🏷️ Cek Promo</button><button data-t="dat">📦 Data Stok</button></nav>
@@ -114,6 +117,7 @@ main{padding:12px 12px 24px}input,select{font-size:16px;padding:12px}button.b{pa
   <label>Item Code atau Barcode</label>
   <div class="row"><input id="code" placeholder="Ketik / scan item code atau barcode" inputmode="text" autocomplete="off"><button class="b fit" id="scanBtn">📷 Scan</button></div>
   <div id="reader" hidden></div><div id="match" class="match" hidden></div>
+  <label>Cari berdasarkan deskripsi item</label><input id="dsearch" placeholder="Ketik nama/deskripsi, mis. durawood butternut" autocomplete="off"><div id="dres"></div>
   <label>Lokasi sample (bisa lebih dari satu jika ada double display)</label><div id="locrows"></div><button class="b" id="addloc" type="button" style="margin-top:8px">+ Tambah lokasi</button>
   <div class="row" style="margin-top:12px"><button class="b p" id="save">Simpan sample</button></div><div id="msg" class="msg"></div></div>
  <div class="card"><b>Sample terakhir diinput</b><div class="tw" style="margin-top:8px"><table><thead><tr><th>Item</th><th>Nama</th><th>Lokasi</th><th>Tanggal</th><th></th></tr></thead><tbody id="recent"></tbody></table></div>
@@ -156,7 +160,7 @@ main{padding:12px 12px 24px}input,select{font-size:16px;padding:12px}button.b{pa
  <label>Stock Warehouse by Location (SCALE) — stok DC</label><input type="file" id="fw" accept=".xlsx,.xls">
  <label>Inventory Movement — stok toko (Ending Balance)</label><input type="file" id="fmv" accept=".xlsx,.xls">
  <div class="row" style="margin-top:10px"><button class="b p" id="proc">Proses &amp; simpan</button><button class="b" id="rstb">Kembali ke data bawaan</button></div><div id="dmsg" class="msg"></div></div>
- <div class="card mu"><b style="color:var(--tx)">Aturan status</b><br>Stok toko = Ending Balance Qty. Stok DC = Available Qty (status Available) dari DC Cipeucang, Cikupa, dan Balongbendo, dihitung per production no (digabung dari 3 DC).<br>• <b>Aman</b>: ada sample, stok toko ≥10<br>• <b>Request stock</b>: ada sample, stok toko &lt;10, dan di DC ada minimal 1 production no dengan stok ≥100<br>• <b>Take out</b>: ada sample, stok toko &lt;10 (atau habis) dan di DC tidak ada production no ≥100 (termasuk DC kosong)<br>• <b>Item berawalan DI/, F/, STP, TE/</b>: stok DC diabaikan, sample di-take out saat stok toko &lt;10<br>• <b>Request stock (belum ada sample)</b>: item belum ada sample, stok toko kosong atau &lt;10, dan di DC ada minimal 1 production no ≥100. Termasuk item yang hanya ada di DC dan tidak ada di laporan toko.<br>• <b>Stok ada, belum ada sample</b>: item belum di-input sample dan layak dipajang (stok toko ≥10, atau toko &lt;10 tetapi DC punya production no ≥100)<br>• <b>Tidak dianjurkan sample</b>: item belum ada sample dan tidak memenuhi syarat dipajang (stok toko dan DC sama-sama 0, stok toko &lt;10 dan tidak ada production no DC ≥100, atau item DI/F/STP/TE dengan stok toko &lt;10). Semua item tetap ditampilkan agar bisa dicari.<br>• <b>Tidak ada di data</b>: kode tidak ditemukan pada laporan.</div>
+ <div class="card mu"><b style="color:var(--tx)">Aturan status</b><br>Stok toko = Ending Balance Qty. Stok DC = Available Qty (status Available) dari DC Cipeucang, Cikupa, dan Balongbendo, dihitung per production no (digabung dari 3 DC).<br>• <b>Aman</b>: ada sample, stok toko ≥10<br>• <b>Request stock</b>: ada sample, stok toko &lt;10, dan di DC ada minimal 1 production no dengan stok ≥100<br>• <b>Take out</b>: ada sample, stok toko &lt;10 (atau habis) dan di DC tidak ada production no ≥100 (termasuk DC kosong)<br>• <b>Item berawalan DI/, F/, STP, TE/</b>: stok DC diabaikan, sample di-take out saat stok toko &lt;10<br>• <b>Produk katalog (CP/ dan J/)</b>: item katalog tidak memakai aturan stok, sehingga sample tidak pernah disarankan Take out walau stok kosong.<br>• <b>Request stock (belum ada sample)</b>: item belum ada sample, stok toko kosong atau &lt;10, dan di DC ada minimal 1 production no ≥100. Termasuk item yang hanya ada di DC dan tidak ada di laporan toko.<br>• <b>Stok ada, belum ada sample</b>: item belum di-input sample dan layak dipajang (stok toko ≥10, atau toko &lt;10 tetapi DC punya production no ≥100)<br>• <b>Tidak dianjurkan sample</b>: item belum ada sample dan tidak memenuhi syarat dipajang (stok toko dan DC sama-sama 0, stok toko &lt;10 dan tidak ada production no DC ≥100, atau item DI/F/STP/TE dengan stok toko &lt;10). Semua item tetap ditampilkan agar bisa dicari.<br>• <b>Tidak ada di data</b>: kode tidak ditemukan pada laporan.</div>
 </section>
 </main>
 <script>
@@ -172,14 +176,16 @@ async function loadStock(){let d=null;try{d=await api('stock')}catch(e){}if(!d||
 const dcSum=d=>Object.values(d||{}).reduce((a,b)=>a+b,0),fmt=n=>(Math.round(n*100)/100).toLocaleString('id-ID');
 function index(){idx={};DATA.items.forEach(i=>{idx[i.c]=i;if(i.b)idx[i.b]=i});$('#meta').textContent=`${DATA.store} · data per ${DATA.date}${DATA.updatedAt?' (diunggah '+new Date(DATA.updatedAt).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})+')':''} · ${DATA.items.length} item`}
 const find=v=>idx[(v||'').trim()];
-const ST={AMAN:['Aman','ok'],REFILL:['Request stock','wn'],REQ:['Request stock (belum ada sample)','wn'],TAKEOUT:['Take out (stok toko habis)','er'],LOW:['Take out (stok toko <10)','er'],NOSMP:['Stok ada, belum ada sample','in'],NOREC:['Tidak dianjurkan sample','gr'],UNK:['Tidak ada di data','gr']};
+const ST={AMAN:['Aman','ok'],REFILL:['Request stock','wn'],REQ:['Request stock (belum ada sample)','wn'],TAKEOUT:['Take out (stok toko habis)','er'],LOW:['Take out (stok toko <10)','er'],NOSMP:['Stok ada, belum ada sample','in'],NOREC:['Tidak dianjurkan sample','gr'],KAT:['Produk katalog (CP/ J/)','in'],UNK:['Tidak ada di data','gr']};
 const THR=10,LOT=100,PRE=['DI/','F/','STP','TE/'];
+const CATP=['CP/','J/'];
+const isCat=i=>CATP.some(p=>(i.n||'').trim().toUpperCase().startsWith(p));
 const tokoOnly=i=>PRE.some(p=>(i.n||'').trim().toUpperCase().startsWith(p));
 const dcMax=i=>{const m={};((i.p&&i.p.length)?i.p:Object.entries(i.d||{}).map(([k,v])=>[k,'',v])).forEach(x=>m[x[1]]=(m[x[1]]||0)+x[2]);return Math.max(0,...Object.values(m))};
-const hint=i=>{if(!i.c)return'';if(i.x&&!tokoOnly(i)){const m=dcMax(i);return 'Hanya ada di DC (tidak ada di laporan toko) · lot terbesar '+fmt(m)+(m>=LOT?' (≥100)':' (<100)')}const lt=i.t<THR;if(tokoOnly(i))return lt?'Stok toko <10 · item DI/F/STP/TE (DC diabaikan)':'Item DI/F/STP/TE: hanya stok toko';if(lt){const m=dcMax(i);return dcSum(i.d)>0?'Stok toko <10 · DC: lot terbesar '+fmt(m)+(m>=LOT?' (≥100)':' (<100)'):'Stok toko <10 · DC kosong'}return''};
-const nsStat=i=>i.t>=THR?'NOSMP':(!tokoOnly(i)&&dcMax(i)>=LOT?'REQ':'NOREC');
+const hint=i=>{if(!i.c)return'';if(isCat(i))return'Produk katalog (CP/ atau J/): tanpa aturan stok, sample dibiarkan';if(i.x&&!tokoOnly(i)){const m=dcMax(i);return 'Hanya ada di DC (tidak ada di laporan toko) · lot terbesar '+fmt(m)+(m>=LOT?' (≥100)':' (<100)')}const lt=i.t<THR;if(tokoOnly(i))return lt?'Stok toko <10 · item DI/F/STP/TE (DC diabaikan)':'Item DI/F/STP/TE: hanya stok toko';if(lt){const m=dcMax(i);return dcSum(i.d)>0?'Stok toko <10 · DC: lot terbesar '+fmt(m)+(m>=LOT?' (≥100)':' (<100)'):'Stok toko <10 · DC kosong'}return''};
+const nsStat=i=>isCat(i)?'KAT':i.t>=THR?'NOSMP':(!tokoOnly(i)&&dcMax(i)>=LOT?'REQ':'NOREC');
 const recSmp=i=>i.t>=THR||(!tokoOnly(i)&&dcMax(i)>=LOT);
-function stat(s){const i=idx[s.c];if(!i)return'UNK';if(i.t>=THR)return'AMAN';if(!tokoOnly(i)&&dcMax(i)>=LOT)return'REFILL';return i.t>0?'LOW':'TAKEOUT'}
+function stat(s){const i=idx[s.c];if(!i)return'UNK';if(isCat(i))return'KAT';if(i.t>=THR)return'AMAN';if(!tokoOnly(i)&&dcMax(i)>=LOT)return'REFILL';return i.t>0?'LOW':'TAKEOUT'}
 function rows(){const r=SM.map(s=>{const i=idx[s.c]||{};return{k:stat(s),c:s.c,b:i.b||'',n:i.n||'(tidak ditemukan)',s:i.s||'',m:i.m||'',locs:s.locs,t:i.t??'',d:i.d?dcSum(i.d):'',dd:i.d,pp:i.p||[],h:hint(i),smp:1}});
  const have=new Set(SM.map(s=>idx[s.c]?.c||s.c));
  DATA.items.forEach(i=>{if(!have.has(i.c))r.push({k:nsStat(i),c:i.c,b:i.b,n:i.n,s:i.s,m:i.m||'',locs:[],t:i.t,d:dcSum(i.d),dd:i.d,pp:i.p||[],h:hint(i)})});return r}
@@ -192,27 +198,49 @@ function render(){fillSel('#sub','Semua kategori item',[...new Set(DATA.items.ma
  const br=$('#brand').value,fl=$('#floc').value,fa=$('#fact').value;
  let base=all.filter(r=>(!sub||r.s===sub||r.k==='UNK')&&(!br||(br==='(Tanpa brand)'?!r.m:r.m===br))&&(!fl||r.locs.includes(fl))&&(fa===''||!!r.smp===(fa==='1')));
  const cnt={ALL:base.length};Object.keys(ST).forEach(k=>cnt[k]=base.filter(r=>r.k===k).length);
- const smpN=SM.length;$('#kpi').innerHTML=`<div class="k"><b>${smpN}</b><span>Total sample diinput</span></div>`+['AMAN','REFILL','REQ','TAKEOUT','LOW','NOSMP','NOREC'].map(k=>`<div class="k" data-f="${k}" style="cursor:pointer;border-left:4px solid var(--${ST[k][1]})"><b>${cnt[k]}</b><span>${ST[k][0]}</span></div>`).join('');
+ const smpN=SM.length;$('#kpi').innerHTML=`<div class="k"><b>${smpN}</b><span>Total sample diinput</span></div>`+['AMAN','KAT','REFILL','REQ','TAKEOUT','LOW','NOSMP','NOREC'].map(k=>`<div class="k" data-f="${k}" style="cursor:pointer;border-left:4px solid var(--${ST[k][1]})"><b>${cnt[k]}</b><span>${ST[k][0]}</span></div>`).join('');
  $('#chips').innerHTML=[['ALL','Semua']].concat(Object.entries(ST).map(([k,v])=>[k,v[0]])).map(([k,l])=>`<button class="chip ${filt===k?'on':''}" data-f="${k}">${l} (${cnt[k]})</button>`).join('')+`<button class="chip ${filt==='SMP'?'on':''}" data-f="SMP">Ada sample (${base.filter(r=>r.smp).length})</button>`;
  let v=base.filter(r=>filt==='ALL'||(filt==='SMP'?r.smp:r.k===filt));
  if(q)v=v.filter(r=>(r.c+r.b+r.n+r.locs.join(' ')+r.pp.map(x=>x[1]).join('')).toLowerCase().includes(q));
- const ord={TAKEOUT:0,LOW:0,REFILL:1,REQ:1,UNK:2,NOSMP:3,AMAN:4,NOREC:5};const so=$('#sort').value,nm=x=>x===''||x==null?-1:x,lk=r=>r.locs.join(', '),pk=r=>r.pp.map(x=>x[1]).filter(Boolean).sort()[0]||'';
+ const ord={TAKEOUT:0,LOW:0,REFILL:1,REQ:1,UNK:2,NOSMP:3,AMAN:4,KAT:4,NOREC:5};const so=$('#sort').value,nm=x=>x===''||x==null?-1:x,lk=r=>r.locs.join(', '),pk=r=>r.pp.map(x=>x[1]).filter(Boolean).sort()[0]||'';
  const sv=(a,b,f,d)=>{const x=f(a),y=f(b);if(!x&&!y)return 0;if(!x)return 1;if(!y)return -1;return d*x.localeCompare(y,'id',{numeric:true})};
  const cmp={'toko-desc':(a,b)=>nm(b.t)-nm(a.t),'toko-asc':(a,b)=>nm(a.t)-nm(b.t),'dc-desc':(a,b)=>nm(b.d)-nm(a.d),'dc-asc':(a,b)=>nm(a.d)-nm(b.d),'loc-asc':(a,b)=>sv(a,b,lk,1),'loc-desc':(a,b)=>sv(a,b,lk,-1),'prod-asc':(a,b)=>sv(a,b,pk,1),'prod-desc':(a,b)=>sv(a,b,pk,-1),'act-1':(a,b)=>(b.smp?1:0)-(a.smp?1:0),'act-0':(a,b)=>(a.smp?1:0)-(b.smp?1:0)};
  v.sort((a,b)=>(cmp[so]?cmp[so](a,b):0)||ord[a.k]-ord[b.k]);
  $('#cnt').innerHTML=`${v.length} baris`+(v.length>LIM?` · menampilkan ${LIM} · <button class="chip" id="more">Tampilkan ${Math.min(200,v.length-LIM)} lagi</button>`:'');window._v=v;
- $('#mb').innerHTML=v.slice(0,LIM).map(r=>`<tr><td><span class="tag ${ST[r.k][1]}">${ST[r.k][0]}</span>${r.h?'<div class="mu">'+r.h+'</div>':''}</td><td>${r.c}<div class="mu">${r.b}</div></td><td>${r.n}${r.m?'<div class="mu">'+esc(r.m)+'</div>':''}</td><td>${r.locs.length?r.locs.map(l=>'<div>📍 '+esc(l)+'</div>').join(''):'<span class=mu>—</span>'}</td><td class="n">${r.t===''?'–':fmt(r.t)}</td><td class="n" title="${Object.entries(r.dd||{}).map(e=>e.join(': ')).join(', ')}">${r.d===''?'–':fmt(r.d)}</td><td class="mu">${prodHtml(r.pp)}</td><td>${r.smp?`<button class="x" data-del="${r.c}">Hapus sample</button>`:`<button class="x" style="color:var(--pr)" data-add="${r.c}">+ Sample</button>`}<button class="x" style="color:var(--pr);margin-left:10px" data-pr="${r.c}">🏷️ Promo</button></td></tr>`).join('');
- const rc=SM.slice(-8).reverse();$('#recent').innerHTML=rc.map(s=>`<tr><td>${s.c}</td><td>${idx[s.c]?.n||'—'}</td><td>${s.locs.map((l,k)=>`<div>${esc(l)} <button class="x" data-dl="${s.c}|${k}">×</button></div>`).join('')}</td><td>${s.at||''}</td><td><button class="x" data-del="${s.c}">Hapus</button></td></tr>`).join('')||'<tr><td colspan=5 class="mu">Belum ada sample.</td></tr>';
+ $('#mb').innerHTML=v.slice(0,LIM).map(r=>`<tr><td><span class="tag ${ST[r.k][1]}">${ST[r.k][0]}</span>${r.h?'<div class="mu">'+r.h+'</div>':''}</td><td>${r.c}<div class="mu">${r.b}</div></td><td>${r.n}${r.m?'<div class="mu">'+esc(r.m)+'</div>':''}</td><td>${r.locs.length?r.locs.map(l=>'<div>📍 '+esc(l)+'</div>').join(''):'<span class=mu>—</span>'}</td><td class="n">${r.t===''?'–':fmt(r.t)}</td><td class="n" title="${Object.entries(r.dd||{}).map(e=>e.join(': ')).join(', ')}">${r.d===''?'–':fmt(r.d)}</td><td class="mu">${prodHtml(r.pp)}</td><td>${r.smp?`<button class="x" style="color:var(--pr)" data-lm="${r.c}">📍 Lokasi</button><button class="x" style="margin-left:10px" data-del="${r.c}">Hapus semua</button>`:`<button class="x" style="color:var(--pr)" data-add="${r.c}">+ Sample</button>`}<button class="x" style="color:var(--pr);margin-left:10px" data-pr="${r.c}">🏷️ Promo</button></td></tr>`).join('');
+ const rc=SM.slice(-8).reverse();$('#recent').innerHTML=rc.map(s=>`<tr><td>${s.c}</td><td>${idx[s.c]?.n||'—'}</td><td>${s.locs.map((l,k)=>`<div>${esc(l)} <button class="x" data-dl="${s.c}|${k}">×</button></div>`).join('')}</td><td>${s.at||''}</td><td><button class="x" style="color:var(--pr)" data-lm="${s.c}">📍 Lokasi</button> <button class="x" data-del="${s.c}">Hapus</button></td></tr>`).join('')||'<tr><td colspan=5 class="mu">Belum ada sample.</td></tr>';
  }
 function show(t){document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('on',e.id===t));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t!=='in')stopScan()}
 function openPromo(code){show('pr');if(window.PROMO)PROMO.find(code)}
 window.sampleOf=no=>{const s=SM.find(x=>x.c===no);return s?s.locs:null};
+window.stockOf=no=>{const s=DATA.stk;if(!s)return null;const x=s[no];return{t:x?x[0]:0,d:x?x[1]:0,found:!!x,date:DATA.date}};
 $('#nav').onclick=e=>{const t=e.target.dataset.t;if(!t)return;t==='pr'?openPromo():show(t)};
 $('#chips').onclick=e=>{if(e.target.dataset.f){filt=e.target.dataset.f;LIM=200;render()}};
 $('#q').oninput=$('#sub').onchange=()=>{LIM=200;render()};['#brand','#floc','#fact','#sort'].forEach(s=>$(s).onchange=()=>{LIM=200;render()});$('#cnt').onclick=e=>{if(e.target.id==='more'){LIM+=200;render()}};
-$('#mb').onclick=$('#recent').onclick=e=>{const d=e.target.dataset;if(d.del){const b=e.target;if(b.dataset.arm){op({op:'del',c:d.del})}else{b.dataset.arm=1;b.dataset.o=b.textContent;b.textContent='Yakin? Klik lagi';b.style.fontWeight='700';setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent=b.dataset.o;b.style.fontWeight=''}},3000)}}if(d.dl){const[c,k]=d.dl.split('|'),s=SM.find(x=>x.c===c);if(s)op({op:'delLoc',c,loc:s.locs[+k]})}if(d.pr)openPromo(d.pr);if(d.add){show('in');$('#code').value=d.add;prev();focusLoc()}};
-function prev(){const i=find($('#code').value),m=$('#match');m.hidden=!$('#code').value.trim();if(!m.hidden)m.innerHTML=i?`<b>${i.n}</b><br>${i.c}${i.b?' · '+i.b:''} · Toko: ${fmt(i.t)} · DC: ${fmt(dcSum(i.d))}${(i.p||[]).length?'<br>Prod No: '+i.p.map(x=>sn(x[0])+' '+(x[1]||'-')+' ('+fmt(x[2])+')').join(', '):''}`:'Kode tidak ada di data stok (tetap bisa disimpan).'}
+$('#mb').onclick=$('#recent').onclick=e=>{const d=e.target.dataset;if(d.del){const b=e.target;if(b.dataset.arm){op({op:'del',c:d.del})}else{b.dataset.arm=1;b.dataset.o=b.textContent;b.textContent='Yakin? Klik lagi';b.style.fontWeight='700';setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent=b.dataset.o;b.style.fontWeight=''}},3000)}}if(d.dl){const[c,k]=d.dl.split('|'),s=SM.find(x=>x.c===c);if(s)op({op:'delLoc',c,loc:s.locs[+k]})}if(d.lm)openLoc(d.lm);if(d.pr)openPromo(d.pr);if(d.add){show('in');$('#code').value=d.add;prev();focusLoc()}};
+function prev(){const i=find($('#code').value),m=$('#match');m.hidden=!$('#code').value.trim();if(!m.hidden)m.innerHTML=(i?`<b>${i.n}</b><br>${i.c}${i.b?' · '+i.b:''} · Toko: ${fmt(i.t)} · DC: ${fmt(dcSum(i.d))}${(i.p||[]).length?'<br>Prod No: '+i.p.map(x=>sn(x[0])+' '+(x[1]||'-')+' ('+fmt(x[2])+')').join(', '):''}`:'Kode tidak ada di data stok (tetap bisa disimpan).')+exLocs(i?i.c:$('#code').value.trim())}
 $('#code').oninput=prev;
+
+const exLocs=c=>{const s=SM.find(x=>x.c===c);return s?'<br><b>Sudah ada sample di:</b> '+s.locs.map(esc).join(' ; ')+'. Lokasi yang Anda isi di bawah akan ditambahkan.':''};
+function dsrch(){const q=$('#dsearch').value.trim().toLowerCase(),box=$('#dres');if(q.length<2){box.innerHTML='';return}
+ const tk=q.split(/\s+/),r=[];let n=0;for(const i of DATA.items){const t=(i.n+' '+i.c+' '+(i.b||'')+' '+(i.m||'')).toLowerCase();if(tk.every(w=>t.includes(w))){n++;if(r.length<30)r.push(i)}}
+ box.innerHTML=r.length?r.map(i=>{const s=SM.find(x=>x.c===i.c);return `<div class="dr" data-c="${esc(i.c)}"><b>${esc(i.n)}</b><div class="mu">${esc(i.c)}${i.b?' · '+esc(i.b):''} · Toko ${fmt(i.t)} · DC ${fmt(dcSum(i.d))}${s?' · <span style="color:var(--ok)">sudah ada sample ('+s.locs.length+' lokasi)</span>':''}</div></div>`}).join('')+(n>30?`<div class="mu" style="margin-top:6px">${n} hasil, menampilkan 30 pertama. Persempit pencarian.</div>`:''):'<div class="mu" style="margin-top:6px">Tidak ditemukan di data item.</div>'}
+$('#dsearch').oninput=dsrch;
+$('#dres').onclick=e=>{const d=e.target.closest('.dr');if(!d)return;$('#code').value=d.dataset.c;$('#dsearch').value='';$('#dres').innerHTML='';prev();focusLoc()};
+function openLoc(c){let m=document.getElementById('locm');if(m)m.remove();
+ m=document.createElement('div');m.id='locm';m.setAttribute('role','dialog');m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:70;display:flex;align-items:center;justify-content:center;padding:14px';
+ const paint=()=>{const s=SM.find(x=>x.c===c);if(!s){m.remove();return}const i=idx[c]||{};
+  m.innerHTML=`<div style="background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:12px;max-width:520px;width:100%;max-height:85vh;overflow:auto;padding:16px"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><b>${esc(i.n||c)}</b><div class="mu">${esc(c)}${i.b?' · '+esc(i.b):''}</div></div><button class="chip" data-lc="x">Tutup</button></div>
+  <div style="margin:12px 0 2px"><b>Lokasi sample (${s.locs.length})</b></div>
+  ${s.locs.map((l,k)=>`<div class="row" style="align-items:center;margin-top:6px"><div>📍 ${esc(l)}</div><button class="b fit" data-lc="del" data-k="${k}">Hapus</button></div>`).join('')}
+  <label>Tambah lokasi lain (jika ada sample di tempat lain)</label><div class="row"><input id="locnew" placeholder="mis. Rak B-12"><button class="b p fit" data-lc="add">Tambah</button></div>
+  <div style="margin-top:14px;border-top:1px solid var(--bd);padding-top:10px"><button class="b fit" data-lc="all" style="color:var(--er)">Hapus semua lokasi (hapus sample)</button></div></div>`};
+ m.onclick=async e=>{const t=e.target,a=t.dataset.lc;if(t===m||a==='x'){m.remove();return}if(!a)return;const s=SM.find(x=>x.c===c);
+  if(a==='add'){const v=document.getElementById('locnew').value.trim();if(!v){document.getElementById('locnew').focus();return}await op({op:'add',c,locs:[v],at:new Date().toLocaleDateString('id-ID')});paint();return}
+  if(a==='del'||a==='all'){if(!t.dataset.arm){t.dataset.arm=1;t.dataset.o=t.textContent;t.textContent='Yakin? Klik lagi';setTimeout(()=>{if(t.isConnected){delete t.dataset.arm;t.textContent=t.dataset.o}},3000);return}
+   if(a==='del')await op({op:'delLoc',c,loc:s.locs[+t.dataset.k]});else await op({op:'del',c});paint()}};
+ m.addEventListener('keydown',e=>{if(e.key==='Escape')m.remove();if(e.key==='Enter'&&e.target.id==='locnew'){const b=m.querySelector('[data-lc=add]');if(b)b.click()}});
+ document.body.appendChild(m);paint()}
 function locRow(v){const d=document.createElement('div');d.className='row';d.style.marginTop='6px';d.innerHTML='<input class="locin" placeholder="mis. Rak A-03 / Display Lt.1 Zona Granit"><button class="b fit" type="button" title="Hapus baris">×</button>';d.firstChild.value=v||'';d.firstChild.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();locRow().firstChild.focus()}};d.lastChild.onclick=()=>{d.remove();if(!document.querySelector('.locin'))locRow()};$('#locrows').appendChild(d);return d}
 function focusLoc(){const a=document.querySelectorAll('.locin');a[a.length-1].focus()}
 $('#addloc').onclick=()=>locRow().firstChild.focus();
@@ -228,7 +256,7 @@ function csv(a){return a.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"
 function dl(name,t){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/csv'}));a.download=name;a.click()}
 $('#exp').onclick=()=>dl('sample.csv',csv([['item','lokasi','tanggal']].concat(SM.map(s=>[s.c,s.locs.join(' ; '),s.at||'']))));
 
-const ACT={AMAN:'Pertahankan sample',REFILL:'Request stock ke DC',REQ:'Request stock ke DC lalu pasang sample',TAKEOUT:'Take out sample',LOW:'Take out sample',NOSMP:'Pasang (buka) sample baru',NOREC:'Tidak perlu sample',UNK:'Cek data item'};
+const ACT={AMAN:'Pertahankan sample',KAT:'Biarkan (produk katalog)',REFILL:'Request stock ke DC',REQ:'Request stock ke DC lalu pasang sample',TAKEOUT:'Take out sample',LOW:'Take out sample',NOSMP:'Pasang (buka) sample baru',NOREC:'Tidak perlu sample',UNK:'Cek data item'};
 $('#expx').onclick=()=>{
  const v=window._v||[];if(!v.length){alert('Tidak ada data untuk diexport. Ubah filter terlebih dahulu.');return}
  if(typeof XLSX==='undefined'){alert('Fitur Excel butuh koneksi internet untuk memuat pustaka. Coba lagi atau pakai CSV.');return}
@@ -257,8 +285,9 @@ $('#proc').onclick=async()=>{const m=$('#dmsg');try{const fw=$('#fw').files[0],f
  m.textContent='Memproses…';const mv=tbl(await rd(fm),'No Item');let store=DATA.store;const hl=mv.head.flat().join(' ').match(/Location\s*:\s*\d+\s*-\s*([^,]+)/);if(hl)store=hl[1].trim();
  const dc={},bc={},pn={},nm={},cg={},OK=['DC CIPEUCANG','DC CIKUPA','DC BALONGBENDO'];if(fw){tbl(await rd(fw),'Item No').rows.forEach(r=>{const c=String(r['Item No']||'').trim();if(!c)return;bc[c]=String(r['Barcode No']||'');nm[c]=String(r['Item Name']||'').trim();cg[c]=String(r['Category']||'').trim();const sn2=String(r['Site Name']||'').trim(),q=+r['Available Qty']||0;if(r['Inventory Status']==='Available'&&q>0&&OK.includes(sn2.toUpperCase())){(dc[c]=dc[c]||{})[sn2]=((dc[c]||{})[sn2]||0)+q;const pr=String(r['Production No']||'').trim(),k=sn2+'|'+pr;(pn[c]=pn[c]||{})[k]=(pn[c][k]||0)+q}})}else DATA.items.forEach(i=>{nm[i.c]=i.n;cg[i.c]='FLOORING AND WALL';dc[i.c]=i.d;bc[i.c]=i.b;pn[i.c]=Object.fromEntries((i.p||[]).map(x=>[x[0]+'|'+x[1],x[2]]))});
  const items=mv.rows.filter(r=>r['Category']==='FLOORING AND WALL').map(r=>{const c=String(r['No Item']).trim();return{c,b:bc[c]||'',n:r['Description'],m:String(r['Master Brand']||'').trim(),s:String(r['Sub Category']||'').trim(),t:+r['Ending Balance Qty']||0,d:dc[c]||{},p:Object.entries(pn[c]||{}).map(([k,v])=>[k.split('|')[0],k.split('|').slice(1).join('|'),v])}});
+ const stk={},olds=DATA.stk||{};mv.rows.forEach(r=>{const c=String(r['No Item']||'').trim();if(c)stk[c]=[(stk[c]?stk[c][0]:0)+(+r['Ending Balance Qty']||0),0]});Object.keys(dc).forEach(c=>{const t=Object.values(dc[c]).reduce((a,b)=>a+b,0);if(stk[c])stk[c][1]=t;else if(t>0)stk[c]=[0,t]});if(!fw)Object.keys(stk).forEach(c=>{stk[c][1]=olds[c]?olds[c][1]:0});
  const seen=new Set(items.map(x=>x.c)),old=Object.fromEntries(DATA.items.map(x=>[x.c,x]));Object.keys(dc).forEach(c=>{if(!seen.has(c)&&cg[c]==='FLOORING AND WALL'&&Object.keys(dc[c]).length)items.push({c,b:bc[c]||'',n:nm[c]||'',m:(old[c]&&old[c].m)||'',s:'DC SAJA',x:1,t:0,d:dc[c],p:Object.entries(pn[c]||{}).map(([k,v])=>[k.split('|')[0],k.split('|').slice(1).join('|'),v])})});
- DATA={store,date:new Date().toLocaleDateString('id-ID'),items,updatedAt:new Date().toISOString()};await api('stock',DATA);index();render();m.style.color='var(--ok)';m.textContent=`Selesai & dibagikan ke semua pengguna: ${items.length} item (termasuk item yang hanya ada di DC).`}catch(e){m.style.color='var(--er)';m.textContent='Gagal: '+e.message}};
+ DATA={store,date:new Date().toLocaleDateString('id-ID'),items,stk,updatedAt:new Date().toISOString()};await api('stock',DATA);index();render();m.style.color='var(--ok)';m.textContent=`Selesai & dibagikan ke semua pengguna: ${items.length} item (termasuk item yang hanya ada di DC).`}catch(e){m.style.color='var(--er)';m.textContent='Gagal: '+e.message}};
 $('#rstb').onclick=async()=>{try{await api('stock',{reset:true});DATA=await (await fetch('/data/stock.json')).json();index();render();$('#dmsg').textContent='Kembali ke data bawaan.'}catch(e){$('#dmsg').textContent='Gagal: '+e.message}};
 $('#kpi').onclick=e=>{const k=e.target.closest('[data-f]');if(k){filt=k.dataset.f;LIM=200;render();$('#chips').scrollIntoView({block:'nearest'})}};$('#refresh').onclick=()=>{loadStock();loadSamples()};loadStock();loadSamples();setInterval(loadSamples,60000);setInterval(loadStock,300000);document.addEventListener('visibilitychange',()=>{if(!document.hidden){loadSamples();loadStock()}});
 </script>

@@ -5,9 +5,33 @@
    Waktu deploy ditampilkan otomatis dari public/build.json yang dibuat
    Netlify saat build (scripts/stamp.mjs).
    ==================================================================== */
-const APP_VERSION = "1.0.1";
-const APP_DATE = "2026-11-16";
+const APP_VERSION = "1.2.1";
+const APP_DATE = "2026-11-19";
 const CHANGELOG = [
+  {
+    v: "1.2.1",
+    date: "2026-11-19",
+    items: [
+      "Warna tampilan dikunci ke tema terang dan teks di tab Promo diberi warna tetap, sehingga judul dan angka selalu terbaca di mode gelap perangkat",
+    ],
+  },
+  {
+    v: "1.2.0",
+    date: "2026-11-19",
+    items: [
+      "Produk katalog (nama diawali CP/ atau J/) tidak memakai aturan stok: sample tidak disarankan Take out walau stok kosong",
+      "Tab Input Sample: pencarian item berdasarkan deskripsi",
+      "Tab Promo: stok toko dan DC diambil dari file yang diupload di tab Data Stok",
+      "Monitoring: kelola lokasi sample (tambah lokasi lain, hapus satu lokasi, atau hapus semua lokasi)",
+    ],
+  },
+  {
+    v: "1.1.0",
+    date: "2026-11-18",
+    items: [
+      "Monitoring sample: tombol Export Excel sesuai filter yang dipilih, berisi aksi yang harus dilakukan dan kolom progress (progress, PIC, tanggal selesai, catatan)",
+    ],
+  },
   {
     v: "1.0.1",
     date: "2026-11-16",
