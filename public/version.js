@@ -5,9 +5,16 @@
    Waktu deploy ditampilkan otomatis dari public/build.json yang dibuat
    Netlify saat build (scripts/stamp.mjs).
    ==================================================================== */
-const APP_VERSION = "1.3.0";
-const APP_DATE = "2026-11-19";
+const APP_VERSION = "1.3.1";
+const APP_DATE = "2026-11-20";
 const CHANGELOG = [
+  {
+    v: "1.3.1",
+    date: "2026-11-20",
+    items: [
+      "Perbaikan tampilan tab Promo: baris tanggal, filter, dan tombol (Import, Simpan ke server, Export, Diagnosa) kembali sejajar ke samping dan rapi, di semua sub-menu Promo",
+    ],
+  },
   {
     v: "1.3.0",
     date: "2026-11-19",
