@@ -38,7 +38,8 @@ $('out').addEventListener('keydown',e=>{if(e.key==='Enter'){const t=e.target.clo
 let tm;['fm','fb','fc','fn','fd'].forEach(id=>$(id).addEventListener('input',()=>{clearTimeout(tm);tm=setTimeout(search,220)}));
 $('fn').addEventListener('keydown',e=>{if(e.key==='Enter'){clearTimeout(tm);search()}});
 $('dt').addEventListener('change',()=>sel&&show(sel,1));$('all').addEventListener('change',()=>sel&&show(sel,1));
-function skH(no){const s=D.stock[no];if(D.si){const v=s==null?0:s;return `<div class="v"${v<0?' style="color:var(--bad)"':''}>${v}</div><div class="k">${s==null?'Tidak tercatat di IMR · ':''}IMR ${esc(D.si.date)}</div>`}return s!=null?`<div class="v">${s}</div>`:`<div class="v muted" style="font-size:15px">Belum ada data</div><div class="k">Import laporan stok (IMR)</div>`}
+function stkOf(no){const w=window.stockOf&&window.stockOf(no);return w?(w.found?w.t:null):(D.stock[no]==null?null:D.stock[no])}
+function skH(no){const w=window.stockOf&&window.stockOf(no);if(w){const v=w.t;return `<div class="v"${v<0?' style="color:var(--bad)"':''}>${v}</div><div class="k">${w.found?'':'Tidak tercatat di laporan · '}Stok toko, data ${esc(w.date)}</div><div class="k">Stok DC: ${w.d}</div>`}const s=D.stock[no];if(D.si){const v=s==null?0:s;return `<div class="v"${v<0?' style="color:var(--bad)"':''}>${v}</div><div class="k">${s==null?'Tidak tercatat di IMR · ':''}IMR ${esc(D.si.date)}</div>`}return s!=null?`<div class="v">${s}</div>`:`<div class="v muted" style="font-size:15px">Belum ada data</div><div class="k">Import laporan stok (IMR)</div>`}
 function tbl(h,rows,note,noF){if(!noF)h=[...h,'Temuan'];return `<div class="tw"><table><thead><tr>${h.map((x,i)=>`<th${/^(Disc|Harga|Min|Hemat|Stok)/.test(x)?' class="num"':''}>${x}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.join(''):`<tr><td colspan="${h.length}" class="muted">${note||'Tidak ada promo.'}</td></tr>`}</tbody></table></div>`}
 function sec(t,sub,body){return `<div class="panel"><h2>${t}<small>${sub}</small></h2>${body}</div>`}
 function show(it,keep){
@@ -46,7 +47,7 @@ function show(it,keep){
  sel=it;FR=[];const no=it[0],all=$('all').checked;
  const np=D.price[no]||manual,P=D.promos,ip=D.ip[no]||[],bp=(it[3]&&D.bp[it[3]])||[];
  const vis=p=>all||st(p)==='a';
- const F=(pt,ct,p,disc,qty)=>fb({popType:pt,codeType:ct,codeId:ct==='Brand'?it[3]:no,brand:it[4],desc:ct==='Brand'?it[4]:it[2],disc,promoName:p[1],promoNo:p[0],qty,start:p[2],end:p[3],stock:D.stock[no]||0,itemNo:no});
+ const F=(pt,ct,p,disc,qty)=>fb({popType:pt,codeType:ct,codeId:ct==='Brand'?it[3]:no,brand:it[4],desc:ct==='Brand'?it[4]:it[2],disc,promoName:p[1],promoNo:p[0],qty,start:p[2],end:p[3],stock:stkOf(no)||0,itemNo:no});
  const cand=[];const nm=np?[{k:'normal',label:'Harga normal',price:np,act:true}]:[];cand.push(...nm);
  const hid=[];const keepr=(p)=>{if(!vis(p)){hid.push(1);return false}return true};
  const dRows=[],bRows=[],mRows=[],mbRows=[],tRows=[];const bAct=[],iAct=[];
@@ -219,7 +220,7 @@ const ddmm=s=>s?s.slice(8)+'/'+s.slice(5,7)+'/'+s.slice(0,4)+' 00:00:00':'';
 async function exItem(){
  if(!sel||!window.XLSX){alert('Library Excel belum siap.');return}
  const wb=XLSX.utils.book_new(),n=sel[0];
- XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['No Item',n],['Barcode',sel[1]],['Deskripsi',sel[2]],['Master Brand',sel[5]],['Brand',sel[4]],['Brand Code',sel[3]],['Harga normal',D.price[n]||''],['Stok',D.stock[n]==null?'':D.stock[n]],['Tanggal cek',$('dt').value],['Harga di POP',popP],['Diskon di POP',popD],['Hasil cek POP',$('vd')?$('vd').textContent:'']]),'Barang');
+ XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['No Item',n],['Barcode',sel[1]],['Deskripsi',sel[2]],['Master Brand',sel[5]],['Brand',sel[4]],['Brand Code',sel[3]],['Harga normal',D.price[n]||''],['Stok',stkOf(n)==null?'':stkOf(n)],['Tanggal cek',$('dt').value],['Harga di POP',popP],['Diskon di POP',popD],['Hasil cek POP',$('vd')?$('vd').textContent:'']]),'Barang');
  document.querySelectorAll('#out .panel').forEach(p=>{const h=p.querySelector('h2'),t=p.querySelector('table');if(!h||!t||h.textContent.startsWith('Cek'))return;
   const c=t.cloneNode(true);if(c.querySelector('th:last-child').textContent==='Temuan')c.querySelectorAll('tr').forEach(r=>r.lastElementChild&&r.removeChild(r.lastElementChild));
   XLSX.utils.book_append_sheet(wb,XLSX.utils.table_to_sheet(c),h.firstChild.textContent.replace(/[\/\\?*\[\]:]/g,'').slice(0,31))});
@@ -414,7 +415,7 @@ const sampleTxt=no=>{const l=window.sampleOf&&window.sampleOf(no);return l&&l.le
 function psub(v){if(v==='mp'&&typeof mLoadOnce==='function')mLoadOnce();document.querySelectorAll('#pr .pv').forEach(e=>e.classList.toggle('on',e.id===v));document.querySelectorAll('#psn .chip').forEach(b=>b.classList.toggle('on',b.dataset.p===v))}
 $('psn').addEventListener('click',e=>{const b=e.target.closest('.chip');if(b)psub(b.dataset.p)});
 async function runFind(code){psub('adm');if(!D){try{await load()}catch(e){}}$('fn').value=code;search()}
-window.PROMO={find(code){if(!code)return;if(!USER){PENDING=code;return}if(ROLE!=='admin'){psub('ut');return}runFind(code)}};
+window.PROMO={sub(v){psub(v)},find(code){if(!code)return;if(!USER){PENDING=code;return}if(ROLE!=='admin'){psub('ut');return}runFind(code)}};
 let PSC=null;
 function pscanStop(){if(PSC){PSC.stop().catch(()=>{});PSC=null}$('scm').hidden=true}
 $('pscan').addEventListener('click',async()=>{$('scm').hidden=false;try{PSC=new Html5Qrcode('pread');await PSC.start({facingMode:'environment'},{fps:10,qrbox:{width:260,height:140}},t=>{$('fn').value=t;pscanStop();$('fn').dispatchEvent(new Event('input'));if(navigator.vibrate)navigator.vibrate(80)},()=>{})}catch(e){pscanStop();alert('Kamera tidak bisa dibuka. Izinkan akses kamera di browser.')}});
