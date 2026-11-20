@@ -1,5 +1,6 @@
 <!DOCTYPE html><html lang="id"><head><meta charset="utf-8">
 <meta name="color-scheme" content="light only">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Monitoring Sample Pajangan</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -8,14 +9,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-:root{--bg:#f6f7f9;--card:#fff;--tx:#1b2330;--mu:#667085;--bd:#e1e5ea;--pr:#1d4ed8;--ok:#15803d;--okb:#dcfce7;--wn:#b45309;--wnb:#fef3c7;--er:#b91c1c;--erb:#fee2e2;--in:#1d4ed8;--inb:#dbeafe;--gr:#475467;--grb:#eceff3;color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg:#f3f5f3;--card:#fff;--tx:#0e1a13;--mu:#66766c;--bd:#e5eae6;--pr:#1f6b45;--ok:#1f7a45;--okb:#e3f4e9;--wn:#b45309;--wnb:#fef3c7;--er:#b91c1c;--erb:#fee2e2;--in:#0f766e;--inb:#d9f3ef;--gr:#51605a;--grb:#eef1ef;color-scheme:only light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header{padding:14px 16px 0;max-width:1100px;margin:auto}h1{font-size:19px;margin:0}.sub{color:var(--mu);font-size:13px}
-nav{display:flex;gap:6px;max-width:1100px;margin:10px auto 0;padding:0 16px;border-bottom:1px solid var(--bd)}
-nav button{background:none;border:0;border-bottom:2px solid transparent;padding:9px 12px;font:inherit;color:var(--mu);cursor:pointer}
-nav button.on{color:var(--pr);border-color:var(--pr);font-weight:600}
-main{max-width:1100px;margin:auto;padding:14px 16px 40px}.tab{display:none}.tab.on{display:block}
+h1{font-size:19px;margin:0}.sub{color:var(--mu);font-size:13px}
+main{padding:0}.tab{display:none}.tab.on{display:block}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:14px}
 label{display:block;font-size:13px;color:var(--mu);margin:10px 0 4px}
 input,select{width:100%;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
@@ -38,10 +36,8 @@ th{color:var(--mu);font-weight:600;background:var(--bg);position:sticky;top:0}td
 .msg{font-size:13px;margin-top:8px}
 
 @media(max-width:700px){
-body{font-size:16px;padding-bottom:76px}header{padding:10px 14px 0}h1{font-size:17px}
-nav{position:fixed;bottom:0;left:0;right:0;margin:0;max-width:none;padding:0 0 env(safe-area-inset-bottom,0px);background:var(--card);border-top:1px solid var(--bd);border-bottom:0;z-index:20}
-nav button{flex:1;padding:12px 2px;font-size:13px;border-bottom:0;border-top:3px solid transparent}nav button.on{border-top-color:var(--pr)}
-main{padding:12px 12px 24px}input,select{font-size:16px;padding:12px}button.b{padding:12px 14px}
+body{font-size:16px}
+input,select{font-size:16px;padding:12px}button.b{padding:12px 14px}
 .row:has(#q){flex-wrap:wrap}.row:has(#q) #q{flex:1 1 100%}.row:has(#q) select{flex:1}
 .chips{flex-wrap:nowrap;overflow-x:auto;margin:0 -12px 10px;padding:0 12px 4px}.chip{white-space:nowrap;padding:8px 13px}
 .cards{grid-template-columns:1fr 1fr}.k b{font-size:24px}
@@ -57,6 +53,82 @@ main{padding:12px 12px 24px}input,select{font-size:16px;padding:12px}button.b{pa
 .x{padding:8px 0;font-size:14px}#reader{max-width:none}
 }
 .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:10px}
+/* ===== Skin gaya dashboard (hijau, kartu membulat) ===== */
+body{background:#e9ede9;font-family:"Plus Jakarta Sans","Urbanist",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--tx)}
+.shell{display:grid;grid-template-columns:268px minmax(0,1fr);gap:14px;max-width:1520px;margin:14px auto;padding:14px;background:#fff;border-radius:30px;box-shadow:0 12px 40px rgba(20,60,40,.10);min-height:calc(100vh - 28px)}
+.side{background:#f3f5f3;border-radius:22px;padding:20px 14px 14px;display:flex;flex-direction:column;position:sticky;top:14px;height:calc(100vh - 56px);overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;padding:0 8px 10px}.brand img{border-radius:10px}
+.sec{font-size:11px;letter-spacing:.09em;color:var(--mu);margin:16px 10px 8px;font-weight:600}
+.navx{display:block}
+.navx button{display:flex;align-items:center;gap:12px;width:100%;padding:11px 12px;border:0;background:none;border-radius:12px;font:inherit;font-size:14.5px;color:var(--mu);cursor:pointer;position:relative;text-align:left;margin:0}
+.navx button svg{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.navx button:hover{background:#e9eee9}
+.navx button.on{color:var(--tx);font-weight:600;background:none}
+.navx button.on svg{color:var(--pr)}
+.side .navx button.on::before{content:"";position:absolute;left:-14px;top:9px;bottom:9px;width:4px;border-radius:0 4px 4px 0;background:var(--pr)}
+.vercard{margin-top:auto;border-radius:20px;padding:16px;color:#fff;background:radial-gradient(circle at 85% 0,#2f8f5b 0,transparent 55%),linear-gradient(160deg,#14532d,#0b3a22);font-size:13px}
+.vercard b{font-size:16px;display:block;margin-bottom:4px}.vercard .chip{background:#fff;color:#14532d;border:0;margin:8px 0 0;font-weight:600;padding:7px 14px}
+.vercard .sub,.vercard [data-ver]{color:#cfe9d9}
+.content{display:flex;flex-direction:column;gap:14px;min-width:0}
+.topbar{background:#f3f5f3;border-radius:22px;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.search{display:flex;align-items:center;gap:10px;background:#fff;border-radius:999px;padding:0 16px;height:46px;flex:1;max-width:460px}
+.search svg{width:19px;height:19px;stroke:var(--tx);fill:none;stroke-width:1.8;flex:none}
+.search input{border:0;background:none;padding:0;height:100%;outline:0}.search kbd{font:12px system-ui;background:#eef1ef;border-radius:7px;padding:3px 8px;color:var(--mu)}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.tb-right #sync{background:#fff;border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.user{display:flex;align-items:center;gap:10px}.av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#2f8f5b,#14532d);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+.user b{display:block;font-size:13.5px;line-height:1.2}.user small{color:var(--mu);font-size:12px}
+.pm{background:#f3f5f3;border-radius:22px;padding:24px;flex:1;min-width:0}
+.pagehead{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+.pagehead h1{font-size:32px;font-weight:600;letter-spacing:-.02em;margin:0 0 4px}.pagehead p{margin:0;color:var(--mu);font-size:14px}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+.btn-g{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;border:1.5px solid var(--pr);background:var(--pr);color:#fff;font:inherit;font-weight:600;font-size:14px;cursor:pointer}
+.btn-g.out{background:transparent;color:var(--pr)}.btn-g:hover{filter:brightness(1.08)}
+main{padding:0}
+.card,.tw{border-radius:20px}.card{padding:20px;border-color:#e8ece9}
+input,select{border-radius:12px;background:#f7f9f7;border-color:#e3e9e4;padding:11px 12px}
+button.b{border-radius:999px;padding:10px 18px}button.p{background:var(--pr);border-color:var(--pr)}
+.chip{border-radius:999px;padding:7px 14px}.chip.on{background:var(--pr);border-color:var(--pr)}
+th{background:#eff3ef}
+.cards{gap:12px}.k{border-radius:18px;padding:14px 16px;border-color:#e8ece9}.k b{font-size:28px;font-weight:600}
+/* dashboard */
+.dtop{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.sc{background:#fff;border-radius:22px;padding:18px;position:relative;cursor:pointer;min-height:132px;transition:transform .15s}.sc:hover{transform:translateY(-2px)}
+.sc h4{margin:0 40px 0 0;font-size:15px;font-weight:600}.sc .big{font-size:44px;font-weight:600;line-height:1.1;margin:12px 0 8px;letter-spacing:-.02em}
+.sc small{font-size:12px;color:var(--mu)}
+.sc .go{position:absolute;right:14px;top:14px;width:32px;height:32px;border-radius:50%;border:1.5px solid #2a3a31;display:grid;place-items:center}.go svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sc.feat{background:radial-gradient(circle at 15% 100%,#3aa66b 0,transparent 55%),linear-gradient(135deg,#1f7a4c,#0f4a2f);color:#fff}.sc.feat small{color:#cfe9d9}.sc.feat .go{background:#fff;color:#14532d;border-color:#fff}
+.dgrid{display:grid;gap:14px;margin-top:14px}.dmid{grid-template-columns:1.55fr 1fr 1fr}.dbot{grid-template-columns:1.3fr 1fr 1fr}
+.dc{background:#fff;border-radius:22px;padding:20px;min-width:0}.dc h4{margin:0 0 4px;font-size:16px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.bars{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;height:200px;margin-top:12px}
+.bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;height:100%;font-size:11px;color:var(--mu);gap:6px;min-width:0;cursor:pointer}
+.bar .bp{width:100%;max-width:46px;border-radius:999px;min-height:26px}.bar .bv{font-weight:700;font-size:12px;color:var(--tx)}.bar .bl{text-align:center;line-height:1.15}
+.hatch{background:repeating-linear-gradient(135deg,#b9c2bc 0 2px,#eef1ef 2px 7px)!important}
+.rem .t{font-size:20px;font-weight:600;color:#1f6b45;margin:12px 0 4px;line-height:1.25}
+.rem .btn-g{width:100%;justify-content:center;margin-top:14px}
+.lst{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.li{display:flex;align-items:center;gap:12px;cursor:pointer;min-width:0}.li:hover .ln{color:var(--pr)}
+.li .ico{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:12px;flex:none;background:#e3f1e8;color:#14532d}
+.li .tx{min-width:0;flex:1}.ln{font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ls{font-size:12px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.donut{display:block;margin:6px auto 0;width:100%;max-width:300px}.leg{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-size:12px;color:var(--mu);margin-top:6px}.leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+.dk{background:radial-gradient(circle at 100% 0,#2f8f5b 0,transparent 55%),linear-gradient(160deg,#124a2c,#0a2f1c);color:#fff;border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:10px}
+.dk h4{margin:0;font-size:16px;font-weight:600}.dk .big{font-size:28px;font-weight:600;line-height:1.2;margin:6px 0}.dk p{margin:0;color:#cfe9d9;font-size:13px}
+.dk .btn-g{background:#fff;color:#14532d;border-color:#fff;justify-content:center}.dk .btn-g.out{background:transparent;color:#fff;border-color:#8fcaa6}
+.foot{display:none;margin-top:18px;font-size:12px;color:var(--mu);text-align:center}
+#bnav{display:none}
+@media(max-width:1180px){.dtop{grid-template-columns:repeat(2,minmax(0,1fr))}.dmid,.dbot{grid-template-columns:1fr 1fr}.dmid>:first-child{grid-column:1/-1}}
+@media(max-width:900px){
+.shell{display:block;margin:0;padding:10px 10px 0;border-radius:0;box-shadow:none;background:#fff;min-height:100vh}
+.side{display:none}.content{gap:10px}
+.topbar{padding:8px 10px;border-radius:18px}.search{height:42px;max-width:none}.search kbd{display:none}.tb-right{margin-left:0}.user div{display:none}.tb-right #sync{padding:6px 10px;font-size:11.5px}
+.pm{padding:16px 12px 24px;border-radius:18px}.pagehead h1{font-size:24px}.foot{display:block}
+#bnav{display:flex;position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:30;background:#fff;border-radius:22px;box-shadow:0 8px 30px rgba(0,0,0,.18);padding:6px;gap:2px;border:1px solid #e5eae6}
+#bnav button{flex:1;flex-direction:column;gap:3px;padding:8px 2px;font-size:10.5px;border-radius:14px;align-items:center;text-align:center}
+#bnav button.on{background:#e3f1e8;color:var(--pr)}#bnav button.on::before{display:none}
+body{padding-bottom:92px}
+.dtop{gap:10px}.sc{padding:14px;min-height:112px}.sc .big{font-size:34px}.dmid,.dbot{grid-template-columns:1fr}.bars{height:170px}
+}
+
 #pr{--ink:var(--tx);--mut:var(--mu);--line:var(--bd);--head:var(--grb);--acc:var(--pr);--bad:var(--er);--badb:var(--erb);--warn:var(--wn);--warnb:var(--wnb);--in:var(--bg)}
 [hidden]{display:none!important}
 #pr,#pr .panel,#pr h2,#pr summary,#pr .v,#pr td,#pr li{color:var(--tx)}
@@ -109,10 +181,23 @@ main{padding:12px 12px 24px}input,select{font-size:16px;padding:12px}button.b{pa
 @media(max-width:700px){#pr input,#pr select{font-size:16px}#pr .btn{padding:9px 12px}#pr .fb{padding:4px 10px}}
 .dr{padding:8px 10px;border:1px solid var(--bd);border-radius:8px;margin-top:6px;cursor:pointer;background:var(--bg)}.dr:hover{border-color:var(--pr)}
 </style></head><body>
-<header><div style="display:flex;align-items:center;gap:10px"><img src="/favicon.svg" width="40" height="40" alt="Logo Sample Pajangan" style="border-radius:10px;flex:none"><h1>Monitoring Sample Pajangan Keramik &amp; Granit</h1></div><div class="sub" id="meta"></div><div class="sub"><span id="sync"></span> <button class="chip" id="refresh" style="padding:3px 10px;margin-left:6px">⟳ Segarkan</button></div><div class="sub" id="ver"></div></header>
-<nav id="nav"><button data-t="in" class="on">➕ Input Sample</button><button data-t="mon">📊 Monitoring</button><button data-t="pr">🏷️ Cek Promo</button><button data-t="dat">📦 Data Stok</button></nav>
+<div class="shell">
+<aside class="side">
+ <div class="brand"><img src="/favicon.svg" width="36" height="36" alt="Logo Sample Pajangan"><span>Sample Pajangan</span></div>
+ <div class="sec">MENU</div>
+ <nav id="nav" class="navx"><button data-t="dash" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg><span>Dashboard</span></button><button data-t="in"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>Input Sample</span></button><button data-t="mon"><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V4M19 20v-6"/></svg><span>Monitoring</span></button><button data-t="pr"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8L3 12z"/><circle cx="7.5" cy="8.5" r="1.2"/></svg><span>Promo</span></button><button data-t="dat"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg><span>Data Stok</span></button></nav>
+ <div class="sec">UMUM</div>
+ <nav class="navx"><button id="refresh"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg><span>Segarkan data</span></button><button id="verOpen"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Riwayat perubahan</span></button></nav>
+ <div class="vercard"><b>Versi website</b><div data-ver></div></div>
+</aside>
+<div class="content">
+ <div class="topbar"><label class="search" for="gsearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="gsearch" placeholder="Cari item, kode, atau deskripsi" autocomplete="off"><kbd>/</kbd></label>
+  <div class="tb-right"><span id="sync"></span><div class="user"><div class="av" id="tbav">SP</div><div><b id="tbs">Toko</b><small>Sample Pajangan</small></div></div></div></div>
+ <div class="pm">
+  <div class="pagehead"><div><h1 id="pt">Dashboard</h1><p id="ps"></p><div class="sub" id="meta" style="margin-top:4px"></div></div><div class="acts" id="pa"></div></div>
 <main>
-<section class="tab on" id="in">
+<section class="tab on" id="dash"><div id="dashbody"></div></section>
+<section class="tab" id="in">
  <div class="card"><b>Tambah / ubah sample</b>
   <label>Item Code atau Barcode</label>
   <div class="row"><input id="code" placeholder="Ketik / scan item code atau barcode" inputmode="text" autocomplete="off"><button class="b fit" id="scanBtn">📷 Scan</button></div>
@@ -163,6 +248,11 @@ main{padding:12px 12px 24px}input,select{font-size:16px;padding:12px}button.b{pa
  <div class="card mu"><b style="color:var(--tx)">Aturan status</b><br>Stok toko = Ending Balance Qty. Stok DC = Available Qty (status Available) dari DC Cipeucang, Cikupa, dan Balongbendo, dihitung per production no (digabung dari 3 DC).<br>• <b>Aman</b>: ada sample, stok toko ≥10<br>• <b>Request stock</b>: ada sample, stok toko &lt;10, dan di DC ada minimal 1 production no dengan stok ≥100<br>• <b>Take out</b>: ada sample, stok toko &lt;10 (atau habis) dan di DC tidak ada production no ≥100 (termasuk DC kosong)<br>• <b>Item berawalan DI/, F/, STP, TE/</b>: stok DC diabaikan, sample di-take out saat stok toko &lt;10<br>• <b>Produk katalog (CP/ dan J/)</b>: item katalog tidak memakai aturan stok, sehingga sample tidak pernah disarankan Take out walau stok kosong.<br>• <b>Request stock (belum ada sample)</b>: item belum ada sample, stok toko kosong atau &lt;10, dan di DC ada minimal 1 production no ≥100. Termasuk item yang hanya ada di DC dan tidak ada di laporan toko.<br>• <b>Stok ada, belum ada sample</b>: item belum di-input sample dan layak dipajang (stok toko ≥10, atau toko &lt;10 tetapi DC punya production no ≥100)<br>• <b>Tidak dianjurkan sample</b>: item belum ada sample dan tidak memenuhi syarat dipajang (stok toko dan DC sama-sama 0, stok toko &lt;10 dan tidak ada production no DC ≥100, atau item DI/F/STP/TE dengan stok toko &lt;10). Semua item tetap ditampilkan agar bisa dicari.<br>• <b>Tidak ada di data</b>: kode tidak ditemukan pada laporan.</div>
 </section>
 </main>
+  <div class="foot" data-ver></div>
+ </div>
+</div>
+</div>
+<nav id="bnav" class="navx"><button data-t="dash" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg><span>Dashboard</span></button><button data-t="in"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>Input</span></button><button data-t="mon"><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V4M19 20v-6"/></svg><span>Monitor</span></button><button data-t="pr"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8L3 12z"/><circle cx="7.5" cy="8.5" r="1.2"/></svg><span>Promo</span></button><button data-t="dat"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg><span>Data</span></button></nav>
 <script>
 const $=s=>document.querySelector(s),LS=(k,v)=>{try{if(v===undefined){const x=localStorage.getItem(k);return x?JSON.parse(x):null}localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}};
 let DATA={store:'',date:'',items:[]},SM=[],idx={},filt='ALL',LIM=200,PIN=LS('pin')||'';
@@ -174,7 +264,7 @@ async function op(o){try{const r=await api('samples',o);SM=r.samples;LS('smp',SM
 async function loadSamples(){try{SM=(await api('samples')).samples;LS('smp',SM);setSync(true)}catch(e){SM=LS('smp')||[];setSync(false,'Offline (menampilkan data lokal)')}render()}
 async function loadStock(){let d=null;try{d=await api('stock')}catch(e){}if(!d||!d.items)d=await (await fetch('/data/stock.json')).json();d.items.forEach(i=>{if(i.s==='CER')i.s='CERAMIC TILE';else if(i.s==='GRA')i.s='GRANITE TILE'});DATA=d;index();render()}
 const dcSum=d=>Object.values(d||{}).reduce((a,b)=>a+b,0),fmt=n=>(Math.round(n*100)/100).toLocaleString('id-ID');
-function index(){idx={};DATA.items.forEach(i=>{idx[i.c]=i;if(i.b)idx[i.b]=i});$('#meta').textContent=`${DATA.store} · data per ${DATA.date}${DATA.updatedAt?' (diunggah '+new Date(DATA.updatedAt).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})+')':''} · ${DATA.items.length} item`}
+function index(){idx={};DATA.items.forEach(i=>{idx[i.c]=i;if(i.b)idx[i.b]=i});$('#tbs').textContent=DATA.store||'';$('#tbav').textContent=((DATA.store||'').split(/\s+/).map(w=>w[0]).join('').slice(0,3))||'SP';$('#meta').textContent=`${DATA.store} · data per ${DATA.date}${DATA.updatedAt?' (diunggah '+new Date(DATA.updatedAt).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})+')':''} · ${DATA.items.length} item`}
 const find=v=>idx[(v||'').trim()];
 const ST={AMAN:['Aman','ok'],REFILL:['Request stock','wn'],REQ:['Request stock (belum ada sample)','wn'],TAKEOUT:['Take out (stok toko habis)','er'],LOW:['Take out (stok toko <10)','er'],NOSMP:['Stok ada, belum ada sample','in'],NOREC:['Tidak dianjurkan sample','gr'],KAT:['Produk katalog (CP/ J/)','in'],UNK:['Tidak ada di data','gr']};
 const THR=10,LOT=100,PRE=['DI/','F/','STP','TE/'];
@@ -193,7 +283,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const sn=s=>s.replace(/^DC\s*/i,'');
 const prodHtml=p=>p.length?p.map(x=>`${sn(x[0])}: <b>${x[1]||'(kosong)'}</b> · ${fmt(x[2])}`).join('<br>'):'–';
 function fillSel(id,first,vals){const e=$(id),cur=e.value,h=`<option value="">${first}</option>`+vals.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(e.dataset.h!==h){e.innerHTML=h;e.dataset.h=h;e.value=cur}}
-function render(){fillSel('#sub','Semua kategori item',[...new Set(DATA.items.map(i=>i.s).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'id')));const all=rows(),sub=$('#sub').value,q=$('#q').value.toLowerCase();fillSel('#brand','Semua Master Brand',[...new Set(DATA.items.map(i=>i.m).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'id')).concat(DATA.items.some(i=>!i.m)?['(Tanpa brand)']:[]));
+function render(){dashRender();fillSel('#sub','Semua kategori item',[...new Set(DATA.items.map(i=>i.s).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'id')));const all=rows(),sub=$('#sub').value,q=$('#q').value.toLowerCase();fillSel('#brand','Semua Master Brand',[...new Set(DATA.items.map(i=>i.m).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'id')).concat(DATA.items.some(i=>!i.m)?['(Tanpa brand)']:[]));
  fillSel('#floc','Semua lokasi sample',[...new Set(SM.flatMap(s=>s.locs))].sort((a,b)=>a.localeCompare(b,'id',{numeric:true})));
  const br=$('#brand').value,fl=$('#floc').value,fa=$('#fact').value;
  let base=all.filter(r=>(!sub||r.s===sub||r.k==='UNK')&&(!br||(br==='(Tanpa brand)'?!r.m:r.m===br))&&(!fl||r.locs.includes(fl))&&(fa===''||!!r.smp===(fa==='1')));
@@ -210,11 +300,16 @@ function render(){fillSel('#sub','Semua kategori item',[...new Set(DATA.items.ma
  $('#mb').innerHTML=v.slice(0,LIM).map(r=>`<tr><td><span class="tag ${ST[r.k][1]}">${ST[r.k][0]}</span>${r.h?'<div class="mu">'+r.h+'</div>':''}</td><td>${r.c}<div class="mu">${r.b}</div></td><td>${r.n}${r.m?'<div class="mu">'+esc(r.m)+'</div>':''}</td><td>${r.locs.length?r.locs.map(l=>'<div>📍 '+esc(l)+'</div>').join(''):'<span class=mu>—</span>'}</td><td class="n">${r.t===''?'–':fmt(r.t)}</td><td class="n" title="${Object.entries(r.dd||{}).map(e=>e.join(': ')).join(', ')}">${r.d===''?'–':fmt(r.d)}</td><td class="mu">${prodHtml(r.pp)}</td><td>${r.smp?`<button class="x" style="color:var(--pr)" data-lm="${r.c}">📍 Lokasi</button><button class="x" style="margin-left:10px" data-del="${r.c}">Hapus semua</button>`:`<button class="x" style="color:var(--pr)" data-add="${r.c}">+ Sample</button>`}<button class="x" style="color:var(--pr);margin-left:10px" data-pr="${r.c}">🏷️ Promo</button></td></tr>`).join('');
  const rc=SM.slice(-8).reverse();$('#recent').innerHTML=rc.map(s=>`<tr><td>${s.c}</td><td>${idx[s.c]?.n||'—'}</td><td>${s.locs.map((l,k)=>`<div>${esc(l)} <button class="x" data-dl="${s.c}|${k}">×</button></div>`).join('')}</td><td>${s.at||''}</td><td><button class="x" style="color:var(--pr)" data-lm="${s.c}">📍 Lokasi</button> <button class="x" data-del="${s.c}">Hapus</button></td></tr>`).join('')||'<tr><td colspan=5 class="mu">Belum ada sample.</td></tr>';
  }
-function show(t){document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('on',e.id===t));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t!=='in')stopScan()}
+const TT={dash:['Dashboard','Pantau sample pajangan, stok, dan promo dalam satu tampilan.'],in:['Input Sample','Catat sample pajangan dengan scan barcode atau pencarian item.'],mon:['Monitoring Sample','Pantau status sample, stok toko dan DC, lalu tentukan tindakannya.'],pr:['Promo','Cek promo dan POP, update harian, serta monitor perubahan promo.'],dat:['Data Stok','Perbarui laporan stok toko dan DC untuk semua pengguna.']};
+const PA={dash:[['go','in','+ Input Sample',''],['go','dat','Perbarui Data','out']],mon:[['x','expx','Export Excel','out']]};
+function show(t){document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('on',e.id===t));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t!=='in')stopScan();
+ const tt=TT[t];if(tt){$('#pt').textContent=tt[0];$('#ps').textContent=tt[1]}
+ $('#pa').innerHTML=(PA[t]||[]).map(a=>`<button class="btn-g ${a[3]}" data-${a[0]}="${a[1]}">${a[2]}</button>`).join('');
+ if(t==='dash')dashRender();window.scrollTo(0,0)}
 function openPromo(code){show('pr');if(window.PROMO)PROMO.find(code)}
 window.sampleOf=no=>{const s=SM.find(x=>x.c===no);return s?s.locs:null};
 window.stockOf=no=>{const s=DATA.stk;if(!s)return null;const x=s[no];return{t:x?x[0]:0,d:x?x[1]:0,found:!!x,date:DATA.date}};
-$('#nav').onclick=e=>{const t=e.target.dataset.t;if(!t)return;t==='pr'?openPromo():show(t)};
+document.querySelectorAll('.navx').forEach(n=>n.onclick=e=>{const b=e.target.closest('button'),t=b&&b.dataset.t;if(!t)return;t==='pr'?openPromo():show(t)});
 $('#chips').onclick=e=>{if(e.target.dataset.f){filt=e.target.dataset.f;LIM=200;render()}};
 $('#q').oninput=$('#sub').onchange=()=>{LIM=200;render()};['#brand','#floc','#fact','#sort'].forEach(s=>$(s).onchange=()=>{LIM=200;render()});$('#cnt').onclick=e=>{if(e.target.id==='more'){LIM+=200;render()}};
 $('#mb').onclick=$('#recent').onclick=e=>{const d=e.target.dataset;if(d.del){const b=e.target;if(b.dataset.arm){op({op:'del',c:d.del})}else{b.dataset.arm=1;b.dataset.o=b.textContent;b.textContent='Yakin? Klik lagi';b.style.fontWeight='700';setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent=b.dataset.o;b.style.fontWeight=''}},3000)}}if(d.dl){const[c,k]=d.dl.split('|'),s=SM.find(x=>x.c===c);if(s)op({op:'delLoc',c,loc:s.locs[+k]})}if(d.lm)openLoc(d.lm);if(d.pr)openPromo(d.pr);if(d.add){show('in');$('#code').value=d.add;prev();focusLoc()}};
@@ -241,6 +336,39 @@ function openLoc(c){let m=document.getElementById('locm');if(m)m.remove();
    if(a==='del')await op({op:'delLoc',c,loc:s.locs[+t.dataset.k]});else await op({op:'del',c});paint()}};
  m.addEventListener('keydown',e=>{if(e.key==='Escape')m.remove();if(e.key==='Enter'&&e.target.id==='locnew'){const b=m.querySelector('[data-lc=add]');if(b)b.click()}});
  document.body.appendChild(m);paint()}
+
+const SLB={AMAN:'Aman',KAT:'Katalog',REFILL:'Request',REQ:'Req. baru',TAKEOUT:'Take out',LOW:'Stok <10',NOSMP:'Belum sample',NOREC:'Tdk perlu'};
+const SCOL={AMAN:'#1f6b45',KAT:'#2f8f5b',REFILL:'#6cc08f',REQ:'#a6dbbb',TAKEOUT:'#c2410c',LOW:'#e0803b',NOSMP:'hatch',NOREC:'hatch'};
+function dashRender(){const box=$('#dashbody');if(!box)return;
+ const all=rows(),c={},cs={};all.forEach(r=>{c[r.k]=(c[r.k]||0)+1;if(r.smp)cs[r.k]=(cs[r.k]||0)+1});
+ const g=k=>c[k]||0,total=DATA.items.length,smp=SM.length,tk=g('TAKEOUT')+g('LOW'),rq=g('REFILL')+g('REQ');
+ const okS=(cs.AMAN||0)+(cs.KAT||0),rqS=cs.REFILL||0,tkS=(cs.TAKEOUT||0)+(cs.LOW||0),sm=okS+rqS+tkS,pct=sm?Math.round(okS/sm*100):0;
+ const go='<span class="go"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></span>';
+ const card=(t,n,sub,f,feat)=>`<div class="sc${feat?' feat':''}" data-go="mon" data-f="${f}"><h4>${t}</h4>${go}<div class="big">${fmt(n)}</div><small>${sub}</small></div>`;
+ const order=['AMAN','KAT','REFILL','REQ','TAKEOUT','LOW','NOSMP','NOREC'],mx=Math.max(1,...order.map(g));
+ const bars=order.map(k=>{const n=g(k),hh=Math.max(10,Math.round(n/mx*100)),col=SCOL[k];return `<div class="bar" data-go="mon" data-f="${k}" title="${esc(ST[k][0])}"><span class="bv">${fmt(n)}</span><div class="bp${col==='hatch'?' hatch':''}" style="height:${hh}%;${col==='hatch'?'':'background:'+col}"></div><span class="bl">${SLB[k]}</span></div>`}).join('');
+ const pr={TAKEOUT:0,LOW:0,REFILL:1,REQ:2,NOSMP:3};
+ const need=all.filter(r=>r.k in pr).sort((a,b)=>pr[a.k]-pr[b.k]).slice(0,6);
+ const nl=need.length?need.map(r=>`<div class="li" data-go="mon" data-q="${esc(r.c)}"><div class="ico">${esc((r.m||r.n||'?').slice(0,2).toUpperCase())}</div><div class="tx"><div class="ln">${esc(r.n)}</div><div class="ls">${esc(r.c)} · Toko ${r.t===''?'-':fmt(r.t)} · DC ${r.d===''?'-':fmt(r.d)}</div></div><span class="tag ${ST[r.k][1]}">${SLB[r.k]}</span></div>`).join(''):'<div class="mu">Tidak ada item yang perlu tindakan.</div>';
+ const rec=SM.slice(-5).reverse().map(s=>{const i=idx[s.c]||{};return `<div class="li" data-go="mon" data-q="${esc(s.c)}"><div class="ico">📍</div><div class="tx"><div class="ln">${esc(i.n||s.c)}</div><div class="ls">${esc(s.locs.join(' ; '))}${s.at?' · '+esc(s.at):''}</div></div></div>`}).join('')||'<div class="mu">Belum ada sample diinput.</div>';
+ const R=88,CX=120,CY=118,pt=a=>[CX+R*Math.cos(Math.PI*(1+a)),CY+R*Math.sin(Math.PI*(1+a))];
+ const arc=(a0,a1)=>{const p0=pt(a0),p1=pt(a1);return `M${p0[0].toFixed(1)} ${p0[1].toFixed(1)}A${R} ${R} 0 0 1 ${p1[0].toFixed(1)} ${p1[1].toFixed(1)}`};
+ let segs='';if(sm){let a=0;[[okS,'#1f6b45'],[rqS,'#6cc08f'],[tkS,'#c2410c']].forEach(([n,col])=>{if(!n)return;const e=Math.min(1,a+n/sm),gp=e-a>0.03?0.006:0;segs+=`<path d="${arc(a+gp,e-gp)}" stroke="${col}" stroke-width="34" fill="none"/>`;a=e})}else segs=`<path d="${arc(0,1)}" stroke="#e5eae6" stroke-width="34" fill="none"/>`;
+ const svg=`<svg class="donut" viewBox="0 0 240 150">${segs}<text x="120" y="108" text-anchor="middle" font-size="38" font-weight="600" fill="#0e1a13">${pct}%</text><text x="120" y="132" text-anchor="middle" font-size="12" fill="#66766c">Sample sesuai aturan</text></svg><div class="leg"><span><i style="background:#1f6b45"></i>Aman ${okS}</span><span><i style="background:#6cc08f"></i>Request ${rqS}</span><span><i style="background:#c2410c"></i>Take out ${tkS}</span></div>`;
+ box.innerHTML=`<div class="dtop">${card('Total Item',total,'Flooring &amp; Wall + item DC saja','ALL',1)}${card('Sudah Ada Sample',smp,(total?Math.round(smp/total*100):0)+'% dari total item','SMP')}${card('Perlu Take out',tk,'Sample dengan stok toko &lt;10 atau habis','TAKEOUT')}${card('Request Stock',rq,'Toko &lt;10 dan DC punya lot ≥100','REFILL')}</div>
+<div class="dgrid dmid"><div class="dc"><h4>Analitik Status Item</h4><div class="mu">Jumlah item per status (ketuk batang untuk membuka)</div><div class="bars">${bars}</div></div>
+<div class="dc rem"><h4>Data Stok</h4><div class="t">${esc(DATA.store||'-')}</div><div class="mu">Data per ${esc(DATA.date||'-')} · ${fmt(total)} item</div><button class="btn-g" data-go="dat">Perbarui Data</button></div>
+<div class="dc"><h4>Sample Terakhir<button class="chip" data-go="in">+ Baru</button></h4><div class="lst">${rec}</div></div></div>
+<div class="dgrid dbot"><div class="dc"><h4>Item Perlu Tindakan<button class="chip" data-go="mon" data-f="ALL">Lihat semua</button></h4><div class="lst">${nl}</div></div>
+<div class="dc"><h4>Kesehatan Sample</h4><div class="mu">Dari ${fmt(sm)} sample terpasang</div>${svg}</div>
+<div class="dk"><h4>Promo &amp; POP</h4><div class="big">Cek promo dan pantau perubahan</div><p>Cek promo barang, update harian, serta promo yang hilang atau berubah.</p><button class="btn-g" data-go="pr">Buka Promo</button><button class="btn-g out" data-go="pr" data-sub="mp">Monitor Perubahan</button></div></div>`}
+$('#dash').onclick=e=>{const el=e.target.closest('[data-go]');if(!el)return;const d=el.dataset;
+ if(d.f!==undefined||d.q!==undefined){filt=d.f||'ALL';$('#q').value=d.q||'';['#brand','#floc','#fact','#sub','#sort'].forEach(s=>{$(s).value=''});LIM=200;render()}
+ if(d.go==='pr'){openPromo();if(d.sub&&window.PROMO)PROMO.sub(d.sub)}else show(d.go)};
+$('#pa').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.go)show(b.dataset.go);if(b.dataset.x)$('#'+b.dataset.x).click()};
+$('#gsearch').onkeydown=e=>{if(e.key==='Enter'){$('#q').value=e.target.value.trim();filt='ALL';LIM=200;render();show('mon')}};
+document.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test((document.activeElement||{}).tagName||'')){e.preventDefault();$('#gsearch').focus()}});
+$('#verOpen').onclick=()=>{const b=document.querySelector('.verBtn');if(b)b.click()};
 function locRow(v){const d=document.createElement('div');d.className='row';d.style.marginTop='6px';d.innerHTML='<input class="locin" placeholder="mis. Rak A-03 / Display Lt.1 Zona Granit"><button class="b fit" type="button" title="Hapus baris">×</button>';d.firstChild.value=v||'';d.firstChild.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();locRow().firstChild.focus()}};d.lastChild.onclick=()=>{d.remove();if(!document.querySelector('.locin'))locRow()};$('#locrows').appendChild(d);return d}
 function focusLoc(){const a=document.querySelectorAll('.locin');a[a.length-1].focus()}
 $('#addloc').onclick=()=>locRow().firstChild.focus();
@@ -289,7 +417,7 @@ $('#proc').onclick=async()=>{const m=$('#dmsg');try{const fw=$('#fw').files[0],f
  const seen=new Set(items.map(x=>x.c)),old=Object.fromEntries(DATA.items.map(x=>[x.c,x]));Object.keys(dc).forEach(c=>{if(!seen.has(c)&&cg[c]==='FLOORING AND WALL'&&Object.keys(dc[c]).length)items.push({c,b:bc[c]||'',n:nm[c]||'',m:(old[c]&&old[c].m)||'',s:'DC SAJA',x:1,t:0,d:dc[c],p:Object.entries(pn[c]||{}).map(([k,v])=>[k.split('|')[0],k.split('|').slice(1).join('|'),v])})});
  DATA={store,date:new Date().toLocaleDateString('id-ID'),items,stk,updatedAt:new Date().toISOString()};await api('stock',DATA);index();render();m.style.color='var(--ok)';m.textContent=`Selesai & dibagikan ke semua pengguna: ${items.length} item (termasuk item yang hanya ada di DC).`}catch(e){m.style.color='var(--er)';m.textContent='Gagal: '+e.message}};
 $('#rstb').onclick=async()=>{try{await api('stock',{reset:true});DATA=await (await fetch('/data/stock.json')).json();index();render();$('#dmsg').textContent='Kembali ke data bawaan.'}catch(e){$('#dmsg').textContent='Gagal: '+e.message}};
-$('#kpi').onclick=e=>{const k=e.target.closest('[data-f]');if(k){filt=k.dataset.f;LIM=200;render();$('#chips').scrollIntoView({block:'nearest'})}};$('#refresh').onclick=()=>{loadStock();loadSamples()};loadStock();loadSamples();setInterval(loadSamples,60000);setInterval(loadStock,300000);document.addEventListener('visibilitychange',()=>{if(!document.hidden){loadSamples();loadStock()}});
+show('dash');$('#kpi').onclick=e=>{const k=e.target.closest('[data-f]');if(k){filt=k.dataset.f;LIM=200;render();$('#chips').scrollIntoView({block:'nearest'})}};$('#refresh').onclick=()=>{loadStock();loadSamples()};loadStock();loadSamples();setInterval(loadSamples,60000);setInterval(loadStock,300000);document.addEventListener('visibilitychange',()=>{if(!document.hidden){loadSamples();loadStock()}});
 </script>
 <script src="/version.js"></script>
 <script src="/js/pako.min.js"></script>
