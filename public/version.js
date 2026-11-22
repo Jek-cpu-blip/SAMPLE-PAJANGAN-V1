@@ -5,9 +5,36 @@
    Waktu deploy ditampilkan otomatis dari public/build.json yang dibuat
    Netlify saat build (scripts/stamp.mjs).
    ==================================================================== */
-const APP_VERSION = "1.3.1";
-const APP_DATE = "2026-11-20";
+const APP_VERSION = "1.5.1";
+const APP_DATE = "2026-11-22";
 const CHANGELOG = [
+  {
+    v: "1.5.1",
+    date: "2026-11-22",
+    items: [
+      "Cek Promo: barang yang ada di data stok tetapi tidak ada di master item promo kini tetap ditampilkan, lengkap dengan penjelasan dan perkiraan promo brand",
+      "Diagnosa data: menampilkan jumlah item stok yang tidak ada di master item promo",
+    ],
+  },
+  {
+    v: "1.5.0",
+    date: "2026-11-21",
+    items: [
+      "Temuan POP kini tersimpan di server: penugasan ke akun staff muncul di perangkat mana pun saat login dengan akun yang ditugaskan, begitu pula untuk admin",
+      "Foto bukti temuan ikut tersimpan di server dan bisa dilihat dari perangkat lain",
+      "Admin bisa membatalkan temuan sekaligus: yang tampil sesuai filter, atau semua temuan",
+      "Impor temuan lama dari perangkat ini ke server",
+    ],
+  },
+  {
+    v: "1.4.0",
+    date: "2026-11-20",
+    items: [
+      "Menu Take Out baru: pilih sendiri item yang akan di-take out dari daftar kandidat (stok toko habis atau di bawah 10), tugaskan ke PIC, dan pantau progres (Belum, Proses, Selesai)",
+      "Bagikan ke tim lewat teks WhatsApp per PIC, link khusus PIC, atau Excel",
+      "Tombol + Take out langsung dari baris Monitoring, dan opsi hapus sample otomatis saat Selesai",
+    ],
+  },
   {
     v: "1.3.1",
     date: "2026-11-20",

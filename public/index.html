@@ -41,10 +41,10 @@ input,select{font-size:16px;padding:12px}button.b{padding:12px 14px}
 .row:has(#q){flex-wrap:wrap}.row:has(#q) #q{flex:1 1 100%}.row:has(#q) select{flex:1}
 .chips{flex-wrap:nowrap;overflow-x:auto;margin:0 -12px 10px;padding:0 12px 4px}.chip{white-space:nowrap;padding:8px 13px}
 .cards{grid-template-columns:1fr 1fr}.k b{font-size:24px}
-#in .tw,#mon .tw{border:0;background:none;overflow:visible}
-#in table,#in tbody,#mon table,#mon tbody{display:block;min-width:0;width:100%}#in thead,#mon thead{display:none}
-#in tr,#mon tr{display:grid;grid-template-columns:1fr 1fr;gap:3px 12px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:10px}
-#in td,#mon td{display:block;border:0;padding:2px 0;grid-column:1/-1;text-align:left!important}
+#in .tw,#mon .tw,#to .tw{border:0;background:none;overflow:visible}
+#in table,#in tbody,#mon table,#mon tbody,#to table,#to tbody{display:block;min-width:0;width:100%}#in thead,#mon thead,#to thead{display:none}
+#in tr,#mon tr,#to tr{display:grid;grid-template-columns:1fr 1fr;gap:3px 12px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:10px}
+#in td,#mon td,#to td{display:block;border:0;padding:2px 0;grid-column:1/-1;text-align:left!important}
 #mb td:nth-child(5),#mb td:nth-child(6),#recent td:nth-child(4),#recent td:nth-child(5){grid-column:auto}
 #mb td:nth-child(2){font-weight:600}
 #mb td:nth-child(4)::before{content:'Lokasi sample'}#mb td:nth-child(5)::before{content:'Stok toko'}#mb td:nth-child(6)::before{content:'Stok DC'}#mb td:nth-child(7)::before{content:'Production No (DC)'}
@@ -129,6 +129,10 @@ body{padding-bottom:92px}
 .dtop{gap:10px}.sc{padding:14px;min-height:112px}.sc .big{font-size:34px}.dmid,.dbot{grid-template-columns:1fr}.bars{height:170px}
 }
 
+.tbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}.tbar>*{flex:none}.tbar input,.tbar select{width:auto;min-width:140px}
+#to td input,#to td select{width:100%;min-width:110px;padding:7px 10px}
+#to .cards{margin-bottom:14px}
+@media(max-width:700px){#to td[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.03em}.tbar input,.tbar select{min-width:0;flex:1 1 140px}}
 #pr{--ink:var(--tx);--mut:var(--mu);--line:var(--bd);--head:var(--grb);--acc:var(--pr);--bad:var(--er);--badb:var(--erb);--warn:var(--wn);--warnb:var(--wnb);--in:var(--bg)}
 [hidden]{display:none!important}
 #pr,#pr .panel,#pr h2,#pr summary,#pr .v,#pr td,#pr li{color:var(--tx)}
@@ -191,7 +195,7 @@ body{padding-bottom:92px}
 <aside class="side">
  <div class="brand"><img src="/favicon.svg" width="36" height="36" alt="Logo Sample Pajangan"><span>Sample Pajangan</span></div>
  <div class="sec">MENU</div>
- <nav id="nav" class="navx"><button data-t="dash" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg><span>Dashboard</span></button><button data-t="in"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>Input Sample</span></button><button data-t="mon"><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V4M19 20v-6"/></svg><span>Monitoring</span></button><button data-t="pr"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8L3 12z"/><circle cx="7.5" cy="8.5" r="1.2"/></svg><span>Promo</span></button><button data-t="dat"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg><span>Data Stok</span></button></nav>
+ <nav id="nav" class="navx"><button data-t="dash" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg><span>Dashboard</span></button><button data-t="in"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>Input Sample</span></button><button data-t="mon"><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V4M19 20v-6"/></svg><span>Monitoring</span></button><button data-t="to"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg><span>Take Out</span></button><button data-t="pr"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8L3 12z"/><circle cx="7.5" cy="8.5" r="1.2"/></svg><span>Promo</span></button><button data-t="dat"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg><span>Data Stok</span></button></nav>
  <div class="sec">UMUM</div>
  <nav class="navx"><button id="refresh"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg><span>Segarkan data</span></button><button id="verOpen"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Riwayat perubahan</span></button></nav>
  <div class="vercard"><b>Versi website</b><div data-ver></div></div>
@@ -220,6 +224,19 @@ body{padding-bottom:92px}
  <div class="row" style="margin-bottom:10px"><input id="q" placeholder="Cari kode, barcode, nama, lokasi…"><select id="sub" class="fit" style="width:auto"><option value="">Semua kategori item</option></select><button class="b fit" id="expm">CSV</button><button class="b fit" id="expx">Excel</button></div>
  <div class="fgrid"><select id="brand"><option value="">Semua Master Brand</option></select><select id="floc"><option value="">Semua lokasi sample</option></select><select id="fact"><option value="">Aksi: semua</option><option value="1">Aksi: Hapus sample (sudah ada sample)</option><option value="0">Aksi: + Sample (belum ada sample)</option></select><select id="sort"><option value="">Urutkan: prioritas status</option><option value="toko-desc">Stok toko: terbanyak</option><option value="toko-asc">Stok toko: tersedikit</option><option value="dc-desc">Stok DC: terbanyak</option><option value="dc-asc">Stok DC: tersedikit</option><option value="loc-asc">Lokasi sample: A–Z</option><option value="loc-desc">Lokasi sample: Z–A</option><option value="prod-asc">Production No (DC): A–Z</option><option value="prod-desc">Production No (DC): Z–A</option><option value="act-1">Aksi: Hapus sample dulu</option><option value="act-0">Aksi: + Sample dulu</option></select></div>
  <div class="tw"><table><thead><tr><th>Status</th><th>Item</th><th>Nama</th><th>Lokasi sample</th><th class="n">Stok toko</th><th class="n">Stok DC</th><th>Production No (DC)</th><th>Aksi</th></tr></thead><tbody id="mb"></tbody></table></div><div class="mu" id="cnt" style="margin-top:6px"></div>
+</section>
+<section class="tab" id="to">
+<div class="cards" id="tokpi"></div>
+<div class="card"><b style="font-size:17px">Daftar Take Out</b><div class="mu">Item yang sudah Anda putuskan untuk di-take out. Tugaskan ke PIC lalu bagikan ke tim.</div>
+ <div class="tbar"><select id="topic"></select><select id="tostat"><option value="">Semua status</option><option value="B">Belum</option><option value="P">Proses</option><option value="S">Selesai</option></select><input id="toq" placeholder="Cari item / PIC / lokasi"></div>
+ <div class="tbar"><input id="tobulk" list="tolist" placeholder="Nama PIC"><button class="b" id="toassign">Tugaskan yang dicentang</button><button class="b" id="todel">Hapus dari daftar</button><button class="b" id="toclr">Bersihkan yang selesai</button></div>
+ <div class="tbar"><button class="b p" id="toshare">Salin teks WhatsApp</button><button class="b" id="towa">Kirim via WhatsApp</button><button class="b" id="tolink">Salin link</button><button class="b" id="toxls">Excel</button><label style="margin:0;display:flex;align-items:center;gap:6px;color:var(--tx)"><input type="checkbox" id="toauto" style="width:auto"> Hapus sample otomatis saat Selesai</label></div>
+ <div id="tolistbox"></div></div>
+<div class="card" style="margin-top:14px"><b style="font-size:17px">Kandidat Take Out</b><div class="mu">Sample yang stok tokonya habis atau di bawah 10 dan tidak ada production no DC ≥100. Pilih yang benar-benar akan di-take out.</div>
+ <div class="tbar"><select id="cats"></select><select id="cstat"><option value="">Semua kandidat</option><option value="TAKEOUT">Stok toko habis</option><option value="LOW">Stok toko &lt;10</option></select><input id="cq" placeholder="Cari kandidat"></div>
+ <div class="tbar"><button class="b p" id="cadd">Tambahkan yang dicentang</button><button class="b" id="caddall">Tambahkan semua yang tampil</button></div>
+ <div id="tocand"></div></div>
+<datalist id="tolist"></datalist>
 </section>
 <section class="tab" id="pr">
 <div id="lg"><div class="lgc"><h2>Masuk ke Promo &amp; Update Harian</h2><div class="muted">Masuk dengan akun admin atau staff</div>
@@ -258,7 +275,7 @@ body{padding-bottom:92px}
  </div>
 </div>
 </div>
-<nav id="bnav" class="navx"><button data-t="dash" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg><span>Dashboard</span></button><button data-t="in"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>Input</span></button><button data-t="mon"><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V4M19 20v-6"/></svg><span>Monitor</span></button><button data-t="pr"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8L3 12z"/><circle cx="7.5" cy="8.5" r="1.2"/></svg><span>Promo</span></button><button data-t="dat"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg><span>Data</span></button></nav>
+<nav id="bnav" class="navx"><button data-t="dash" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg><span>Dashboard</span></button><button data-t="in"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>Input</span></button><button data-t="mon"><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V4M19 20v-6"/></svg><span>Monitor</span></button><button data-t="to"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg><span>Take Out</span></button><button data-t="pr"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8L3 12z"/><circle cx="7.5" cy="8.5" r="1.2"/></svg><span>Promo</span></button><button data-t="dat"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg><span>Data</span></button></nav>
 <script>
 const $=s=>document.querySelector(s),LS=(k,v)=>{try{if(v===undefined){const x=localStorage.getItem(k);return x?JSON.parse(x):null}localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}};
 let DATA={store:'',date:'',items:[]},SM=[],idx={},filt='ALL',LIM=200,PIN=LS('pin')||'';
@@ -303,22 +320,24 @@ function render(){dashRender();fillSel('#sub','Semua kategori item',[...new Set(
  const cmp={'toko-desc':(a,b)=>nm(b.t)-nm(a.t),'toko-asc':(a,b)=>nm(a.t)-nm(b.t),'dc-desc':(a,b)=>nm(b.d)-nm(a.d),'dc-asc':(a,b)=>nm(a.d)-nm(b.d),'loc-asc':(a,b)=>sv(a,b,lk,1),'loc-desc':(a,b)=>sv(a,b,lk,-1),'prod-asc':(a,b)=>sv(a,b,pk,1),'prod-desc':(a,b)=>sv(a,b,pk,-1),'act-1':(a,b)=>(b.smp?1:0)-(a.smp?1:0),'act-0':(a,b)=>(a.smp?1:0)-(b.smp?1:0)};
  v.sort((a,b)=>(cmp[so]?cmp[so](a,b):0)||ord[a.k]-ord[b.k]);
  $('#cnt').innerHTML=`${v.length} baris`+(v.length>LIM?` · menampilkan ${LIM} · <button class="chip" id="more">Tampilkan ${Math.min(200,v.length-LIM)} lagi</button>`:'');window._v=v;
- $('#mb').innerHTML=v.slice(0,LIM).map(r=>`<tr><td><span class="tag ${ST[r.k][1]}">${ST[r.k][0]}</span>${r.h?'<div class="mu">'+r.h+'</div>':''}</td><td>${r.c}<div class="mu">${r.b}</div></td><td>${r.n}${r.m?'<div class="mu">'+esc(r.m)+'</div>':''}</td><td>${r.locs.length?r.locs.map(l=>'<div>📍 '+esc(l)+'</div>').join(''):'<span class=mu>—</span>'}</td><td class="n">${r.t===''?'–':fmt(r.t)}</td><td class="n" title="${Object.entries(r.dd||{}).map(e=>e.join(': ')).join(', ')}">${r.d===''?'–':fmt(r.d)}</td><td class="mu">${prodHtml(r.pp)}</td><td>${r.smp?`<button class="x" style="color:var(--pr)" data-lm="${r.c}">📍 Lokasi</button><button class="x" style="margin-left:10px" data-del="${r.c}">Hapus semua</button>`:`<button class="x" style="color:var(--pr)" data-add="${r.c}">+ Sample</button>`}<button class="x" style="color:var(--pr);margin-left:10px" data-pr="${r.c}">🏷️ Promo</button></td></tr>`).join('');
+ $('#mb').innerHTML=v.slice(0,LIM).map(r=>`<tr><td><span class="tag ${ST[r.k][1]}">${ST[r.k][0]}</span>${r.h?'<div class="mu">'+r.h+'</div>':''}</td><td>${r.c}<div class="mu">${r.b}</div></td><td>${r.n}${r.m?'<div class="mu">'+esc(r.m)+'</div>':''}</td><td>${r.locs.length?r.locs.map(l=>'<div>📍 '+esc(l)+'</div>').join(''):'<span class=mu>—</span>'}</td><td class="n">${r.t===''?'–':fmt(r.t)}</td><td class="n" title="${Object.entries(r.dd||{}).map(e=>e.join(': ')).join(', ')}">${r.d===''?'–':fmt(r.d)}</td><td class="mu">${prodHtml(r.pp)}</td><td>${r.smp?`<button class="x" style="color:var(--pr)" data-lm="${r.c}">📍 Lokasi</button>${r.k==='TAKEOUT'||r.k==='LOW'?`<button class="x" style="margin-left:10px;color:var(--er)" data-to="${r.c}">+ Take out</button>`:''}<button class="x" style="margin-left:10px" data-del="${r.c}">Hapus semua</button>`:`<button class="x" style="color:var(--pr)" data-add="${r.c}">+ Sample</button>`}<button class="x" style="color:var(--pr);margin-left:10px" data-pr="${r.c}">🏷️ Promo</button></td></tr>`).join('');
  const rc=SM.slice(-8).reverse();$('#recent').innerHTML=rc.map(s=>`<tr><td>${s.c}</td><td>${idx[s.c]?.n||'—'}</td><td>${s.locs.map((l,k)=>`<div>${esc(l)} <button class="x" data-dl="${s.c}|${k}">×</button></div>`).join('')}</td><td>${s.at||''}</td><td><button class="x" style="color:var(--pr)" data-lm="${s.c}">📍 Lokasi</button> <button class="x" data-del="${s.c}">Hapus</button></td></tr>`).join('')||'<tr><td colspan=5 class="mu">Belum ada sample.</td></tr>';
  }
-const TT={dash:['Dashboard','Pantau sample pajangan, stok, dan promo dalam satu tampilan.'],in:['Input Sample','Catat sample pajangan dengan scan barcode atau pencarian item.'],mon:['Monitoring Sample','Pantau status sample, stok toko dan DC, lalu tentukan tindakannya.'],pr:['Promo','Cek promo dan POP, update harian, serta monitor perubahan promo.'],dat:['Data Stok','Perbarui laporan stok toko dan DC untuk semua pengguna.']};
+const TT={to:['Take Out','Pilih item yang akan di-take out, tugaskan ke tim, dan pantau progresnya.'],dash:['Dashboard','Pantau sample pajangan, stok, dan promo dalam satu tampilan.'],in:['Input Sample','Catat sample pajangan dengan scan barcode atau pencarian item.'],mon:['Monitoring Sample','Pantau status sample, stok toko dan DC, lalu tentukan tindakannya.'],pr:['Promo','Cek promo dan POP, update harian, serta monitor perubahan promo.'],dat:['Data Stok','Perbarui laporan stok toko dan DC untuk semua pengguna.']};
 const PA={dash:[['go','in','+ Input Sample',''],['go','dat','Perbarui Data','out']],mon:[['x','expx','Export Excel','out']]};
 function show(t){document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('on',e.id===t));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t!=='in')stopScan();
  const tt=TT[t];if(tt){$('#pt').textContent=tt[0];$('#ps').textContent=tt[1]}
  $('#pa').innerHTML=(PA[t]||[]).map(a=>`<button class="btn-g ${a[3]}" data-${a[0]}="${a[1]}">${a[2]}</button>`).join('');
- if(t==='dash')dashRender();window.scrollTo(0,0)}
+ if(t==='dash')dashRender();if(t==='to')toLoad();window.scrollTo(0,0)}
 function openPromo(code){show('pr');if(window.PROMO)PROMO.find(code)}
 window.sampleOf=no=>{const s=SM.find(x=>x.c===no);return s?s.locs:null};
+window.itemOf=no=>{const i=idx[no];return i?{c:i.c,b:i.b,n:i.n,m:i.m,s:i.s,t:i.t,d:dcSum(i.d)}:null};
+window.stockCodes=()=>DATA.items.map(i=>i.c);
 window.stockOf=no=>{const s=DATA.stk;if(!s)return null;const x=s[no];return{t:x?x[0]:0,d:x?x[1]:0,found:!!x,date:DATA.date}};
 document.querySelectorAll('.navx').forEach(n=>n.onclick=e=>{const b=e.target.closest('button'),t=b&&b.dataset.t;if(!t)return;t==='pr'?openPromo():show(t)});
 $('#chips').onclick=e=>{if(e.target.dataset.f){filt=e.target.dataset.f;LIM=200;render()}};
 $('#q').oninput=$('#sub').onchange=()=>{LIM=200;render()};['#brand','#floc','#fact','#sort'].forEach(s=>$(s).onchange=()=>{LIM=200;render()});$('#cnt').onclick=e=>{if(e.target.id==='more'){LIM+=200;render()}};
-$('#mb').onclick=$('#recent').onclick=e=>{const d=e.target.dataset;if(d.del){const b=e.target;if(b.dataset.arm){op({op:'del',c:d.del})}else{b.dataset.arm=1;b.dataset.o=b.textContent;b.textContent='Yakin? Klik lagi';b.style.fontWeight='700';setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent=b.dataset.o;b.style.fontWeight=''}},3000)}}if(d.dl){const[c,k]=d.dl.split('|'),s=SM.find(x=>x.c===c);if(s)op({op:'delLoc',c,loc:s.locs[+k]})}if(d.lm)openLoc(d.lm);if(d.pr)openPromo(d.pr);if(d.add){show('in');$('#code').value=d.add;prev();focusLoc()}};
+$('#mb').onclick=$('#recent').onclick=e=>{const d=e.target.dataset;if(d.del){const b=e.target;if(b.dataset.arm){op({op:'del',c:d.del})}else{b.dataset.arm=1;b.dataset.o=b.textContent;b.textContent='Yakin? Klik lagi';b.style.fontWeight='700';setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent=b.dataset.o;b.style.fontWeight=''}},3000)}}if(d.dl){const[c,k]=d.dl.split('|'),s=SM.find(x=>x.c===c);if(s)op({op:'delLoc',c,loc:s.locs[+k]})}if(d.lm)openLoc(d.lm);if(d.to)toAddOne(d.to,e.target);if(d.pr)openPromo(d.pr);if(d.add){show('in');$('#code').value=d.add;prev();focusLoc()}};
 function prev(){const i=find($('#code').value),m=$('#match');m.hidden=!$('#code').value.trim();if(!m.hidden)m.innerHTML=(i?`<b>${i.n}</b><br>${i.c}${i.b?' · '+i.b:''} · Toko: ${fmt(i.t)} · DC: ${fmt(dcSum(i.d))}${(i.p||[]).length?'<br>Prod No: '+i.p.map(x=>sn(x[0])+' '+(x[1]||'-')+' ('+fmt(x[2])+')').join(', '):''}`:'Kode tidak ada di data stok (tetap bisa disimpan).')+exLocs(i?i.c:$('#code').value.trim())}
 $('#code').oninput=prev;
 
@@ -375,6 +394,71 @@ $('#pa').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.datase
 $('#gsearch').onkeydown=e=>{if(e.key==='Enter'){$('#q').value=e.target.value.trim();filt='ALL';LIM=200;render();show('mon')}};
 document.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test((document.activeElement||{}).tagName||'')){e.preventDefault();$('#gsearch').focus()}});
 $('#verOpen').onclick=()=>{const b=document.querySelector('.verBtn');if(b)b.click()};
+/* ===== Take Out: daftar item yang diputuskan untuk di-take out, dibagikan ke tim ===== */
+let TO=[],TOSEL=new Set(),CSEL=new Set(),TOLIM=50,CLIM=50,TOPIC0='';
+const TOS={B:'Belum',P:'Proses',S:'Selesai'};
+async function toLoad(){try{TO=(await api('takeouts')).items||[]}catch(e){TO=[]}toRender()}
+async function toOp(b){try{const r=await api('takeouts',b);TO=r.items;toRender();return r}catch(e){alert('Gagal menyimpan: '+e.message);toLoad()}}
+const toCands=()=>{const used=new Set(TO.filter(x=>x.st!=='S').map(x=>x.c));return rows().filter(r=>r.smp&&(r.k==='TAKEOUT'||r.k==='LOW')&&!used.has(r.c))};
+const toItem=r=>({c:r.c,n:r.n,b:r.b,s:r.s,m:r.m,locs:r.locs,t:r.t===''?0:r.t,d:r.d===''?0:r.d,why:ST[r.k][0]});
+function toRender(){if(!$('#tolistbox'))return;
+ const pics=[...new Set(TO.map(x=>x.pic).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'id'));
+ fillSel('#topic','Semua PIC',pics.concat(TO.some(x=>!x.pic)?['(Belum ditugaskan)']:[]));
+ if(TOPIC0&&pics.includes(TOPIC0)){$('#topic').value=TOPIC0;TOPIC0=''}
+ $('#tolist').innerHTML=pics.map(p=>`<option value="${esc(p)}">`).join('');
+ const cn={B:0,P:0,S:0};TO.forEach(x=>{cn[x.st]=(cn[x.st]||0)+1});const cands=toCands();
+ $('#tokpi').innerHTML=[['Kandidat take out',cands.length],['Dalam daftar',TO.length],['Belum',cn.B],['Proses',cn.P],['Selesai',cn.S]].map(([l,v])=>`<div class="k"><b>${v}</b><span>${l}</span></div>`).join('');
+ const pf=$('#topic').value,sf=$('#tostat').value,q=$('#toq').value.trim().toLowerCase(),od={B:0,P:1,S:2};
+ const L=TO.filter(x=>(!pf||(pf==='(Belum ditugaskan)'?!x.pic:x.pic===pf))&&(!sf||x.st===sf)&&(!q||(x.c+' '+x.n+' '+(x.pic||'')+' '+x.locs.join(' ')).toLowerCase().includes(q))).sort((a,b)=>(od[a.st]-od[b.st])||String(a.pic||'~').localeCompare(String(b.pic||'~'),'id'));
+ window._tol=L;
+ const live=x=>{const s=SM.find(y=>y.c===x.c);if(!s)return '<span class="tag gr">Sample sudah tidak ada</span>';const k=stat(s);return `<span class="tag ${ST[k][1]}">${esc(ST[k][0])}</span>`};
+ const trs=L.slice(0,TOLIM).map(x=>`<tr><td><input type="checkbox" class="tok" data-c="${esc(x.c)}"${TOSEL.has(x.c)?' checked':''} aria-label="Pilih"></td><td data-l="Item">${esc(x.n)}<div class="mu">${esc(x.c)}${x.b?' · '+esc(x.b):''}</div></td><td data-l="Lokasi sample">${x.locs.map(l=>'📍 '+esc(l)).join('<br>')||'-'}</td><td data-l="Kondisi sekarang">${live(x)}<div class="mu">saat ditambahkan: toko ${fmt(x.t)} · DC ${fmt(x.d)}</div></td><td data-l="PIC"><input class="topic2" data-c="${esc(x.c)}" list="tolist" value="${esc(x.pic||'')}" placeholder="Nama PIC"></td><td data-l="Status"><select class="tost" data-c="${esc(x.c)}">${Object.entries(TOS).map(([v,t])=>`<option value="${v}"${v===x.st?' selected':''}>${t}</option>`).join('')}</select></td><td data-l="Catatan"><input class="tonote" data-c="${esc(x.c)}" value="${esc(x.note||'')}" placeholder="Catatan"></td></tr>`).join('');
+ $('#tolistbox').innerHTML=L.length?`<div class="tw"><table><thead><tr><th><input type="checkbox" id="toall" style="width:auto" aria-label="Pilih semua"></th><th>Item</th><th>Lokasi sample</th><th>Kondisi sekarang</th><th>PIC</th><th>Status</th><th>Catatan</th></tr></thead><tbody>${trs}</tbody></table></div>${L.length>TOLIM?`<div class="mu" style="margin-top:8px">Menampilkan ${TOLIM} dari ${L.length}. <button class="chip" data-tm="more">Tampilkan 50 lagi</button></div>`:''}`:'<div class="mu" style="margin-top:8px">Belum ada item di daftar. Pilih dari kandidat di bawah.</div>';
+ fillSel('#cats','Semua kategori',[...new Set(cands.map(r=>r.s).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'id')));
+ const cf=$('#cats').value,c2=$('#cstat').value,cq=$('#cq').value.trim().toLowerCase();
+ const C=cands.filter(r=>(!cf||r.s===cf)&&(!c2||r.k===c2)&&(!cq||(r.c+' '+r.n+' '+(r.b||'')+' '+(r.m||'')+' '+r.locs.join(' ')).toLowerCase().includes(cq))).sort((a,b)=>String(a.s).localeCompare(String(b.s),'id')||a.n.localeCompare(b.n));
+ window._toc=C;
+ const crs=C.slice(0,CLIM).map(r=>`<tr><td><input type="checkbox" class="toc" data-c="${esc(r.c)}"${CSEL.has(r.c)?' checked':''} aria-label="Pilih"></td><td data-l="Item">${esc(r.n)}<div class="mu">${esc(r.c)}${r.b?' · '+esc(r.b):''}${r.s?' · '+esc(r.s):''}</div></td><td data-l="Lokasi sample">${r.locs.map(l=>'📍 '+esc(l)).join('<br>')||'-'}</td><td data-l="Stok toko / DC">${fmt(r.t)} / ${fmt(r.d)}</td><td data-l="Status"><span class="tag ${ST[r.k][1]}">${esc(ST[r.k][0])}</span><div class="mu">${esc(r.h||'')}</div></td></tr>`).join('');
+ $('#tocand').innerHTML=C.length?`<div class="tw"><table><thead><tr><th><input type="checkbox" id="toca" style="width:auto" aria-label="Pilih semua"></th><th>Item</th><th>Lokasi sample</th><th>Stok toko / DC</th><th>Status</th></tr></thead><tbody>${crs}</tbody></table></div>${C.length>CLIM?`<div class="mu" style="margin-top:8px">Menampilkan ${CLIM} dari ${C.length}. <button class="chip" data-cm="more">Tampilkan 50 lagi</button></div>`:''}`:'<div class="mu" style="margin-top:8px">Tidak ada kandidat. Semua sample sudah sesuai aturan atau sudah masuk daftar.</div>'}
+function toPic(){const p=$('#topic').value;return p==='(Belum ditugaskan)'?'':p}
+function toText(pic){const open=TO.filter(x=>x.st!=='S'&&(!pic||x.pic===pic));if(!open.length)return '';const g={};open.forEach(x=>{const k=x.pic||'Belum ditugaskan';(g[k]=g[k]||[]).push(x)});
+ let t='*Take Out Sample - '+(DATA.store||'')+'*\n'+new Date().toLocaleDateString('id-ID')+' · '+open.length+' item\n';
+ Object.keys(g).sort((a,b)=>a.localeCompare(b,'id')).forEach(p=>{t+='\n*'+p+' ('+g[p].length+' item)*\n';g[p].forEach((x,i)=>{t+=(i+1)+'. '+x.c+' - '+x.n+(x.locs.length?' | Lokasi: '+x.locs.join(' ; '):'')+'\n'})});
+ return t+'\nUpdate progres: '+toLink(pic)}
+const toLink=pic=>location.origin+location.pathname+'#takeout'+(pic?'&pic='+encodeURIComponent(pic):'');
+async function toCopy(t){try{await navigator.clipboard.writeText(t);return true}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand('copy')}catch(x){}a.remove();return ok}}
+async function toAddOne(c,btn){const r=rows().find(x=>x.c===c&&x.smp);if(!r)return;const res=await toOp({op:'add',items:[toItem(r)]});if(res&&btn){btn.textContent=res.added?'✓ Ditambahkan':'Sudah ada di daftar';btn.disabled=true}}
+function toHash(){if(/^#takeout/.test(location.hash)){const m=location.hash.match(/pic=([^&]*)/);TOPIC0=m?decodeURIComponent(m[1]):'';show('to')}}
+const toAddRows=async list=>{if(!list.length){alert('Pilih kandidat terlebih dahulu.');return}const r=await toOp({op:'add',items:list.map(toItem)});if(r){CSEL=new Set();toRender();alert(r.added+' item ditambahkan ke daftar'+(r.skipped?', '+r.skipped+' sudah ada.':'.'))}};
+$('#to').addEventListener('click',async e=>{const t=e.target,id=t.id,d=t.dataset;
+ if(d.tm==='more'){TOLIM+=50;toRender();return}if(d.cm==='more'){CLIM+=50;toRender();return}
+ if(id==='cadd')return toAddRows((window._toc||[]).filter(r=>CSEL.has(r.c)));
+ if(id==='caddall'){const l=window._toc||[];if(l.length&&confirm('Tambahkan '+l.length+' item yang tampil ke daftar take out?'))toAddRows(l);return}
+ if(id==='toassign'){const cs=[...TOSEL];if(!cs.length){alert('Centang item di daftar dulu.');return}await toOp({op:'assign',cs,pic:$('#tobulk').value.trim()});TOSEL=new Set();toRender();return}
+ if(id==='todel'){const cs=[...TOSEL];if(!cs.length){alert('Centang item di daftar dulu.');return}if(confirm('Hapus '+cs.length+' item dari daftar take out? (Sample di data monitoring tidak ikut terhapus)')){await toOp({op:'del',cs});TOSEL=new Set();toRender()}return}
+ if(id==='toclr'){if(confirm('Hapus semua item berstatus Selesai dari daftar?'))await toOp({op:'clearDone'});return}
+ if(id==='toshare'||id==='towa'){const tx=toText(toPic());if(!tx){alert('Tidak ada item yang belum selesai untuk dibagikan.');return}
+  if(id==='towa'&&tx.length<=1800){window.open('https://wa.me/?text='+encodeURIComponent(tx),'_blank')}else{alert((await toCopy(tx))?'Teks disalin. Tempel di WhatsApp grup tim.'+(id==='towa'?'\n(Daftar terlalu panjang untuk dikirim langsung, jadi disalin.)':''):'Gagal menyalin. Coba lagi.')}return}
+ if(id==='tolink'){alert((await toCopy(toLink(toPic())))?'Link disalin'+(toPic()?' (untuk PIC '+toPic()+')':'')+'. Kirim ke tim.':'Gagal menyalin.');return}
+ if(id==='toxls'){const L=window._tol||[];if(!L.length){alert('Tidak ada data untuk diexport.');return}if(typeof XLSX==='undefined'){alert('Fitur Excel butuh koneksi internet.');return}
+  const H=['No','Item Code','Nama Item','Kategori','Master Brand','Lokasi Sample','Stok Toko (saat ditambahkan)','Stok DC','Alasan','PIC','Status','Catatan','Ditambahkan','Selesai'];
+  const ws=XLSX.utils.aoa_to_sheet([H].concat(L.map((x,i)=>[i+1,x.c,x.n,x.s||'',x.m||'',x.locs.join(' ; '),x.t,x.d,x.why||'',x.pic||'',TOS[x.st],x.note||'',x.at?x.at.slice(0,10):'',x.doneAt?x.doneAt.slice(0,10):''])));
+  ws['!cols']=[5,13,48,18,16,26,12,10,26,14,10,28,12,12].map(w=>({wch:w}));ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:L.length,c:H.length-1}})};
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Take Out');XLSX.writeFile(wb,'Take_Out_Sample_'+new Date().toISOString().slice(0,10)+'.xlsx')}});
+$('#to').addEventListener('change',async e=>{const t=e.target,c=t.dataset.c;
+ if(['topic','tostat','cats','cstat'].includes(t.id)){TOLIM=50;CLIM=50;toRender();return}
+ if(t.id==='toauto'){LS('toauto',t.checked);return}
+ if(t.id==='toall'){(window._tol||[]).slice(0,TOLIM).forEach(x=>{t.checked?TOSEL.add(x.c):TOSEL.delete(x.c)});toRender();return}
+ if(t.id==='toca'){(window._toc||[]).slice(0,CLIM).forEach(x=>{t.checked?CSEL.add(x.c):CSEL.delete(x.c)});toRender();return}
+ if(t.classList.contains('tok')){t.checked?TOSEL.add(c):TOSEL.delete(c);return}
+ if(t.classList.contains('toc')){t.checked?CSEL.add(c):CSEL.delete(c);return}
+ if(t.classList.contains('topic2'))return void await toOp({op:'update',c,pic:t.value.trim()});
+ if(t.classList.contains('tonote'))return void await toOp({op:'update',c,note:t.value});
+ if(t.classList.contains('tost')){await toOp({op:'update',c,st:t.value});if(t.value==='S'&&$('#toauto').checked&&SM.some(s=>s.c===c))await op({op:'del',c})}});
+let tom;$('#to').addEventListener('input',e=>{if(e.target.id==='toq'||e.target.id==='cq'){clearTimeout(tom);tom=setTimeout(()=>{TOLIM=50;CLIM=50;toRender()},250)}});
+$('#toauto').checked=!!LS('toauto');
+setInterval(()=>{if($('#to').classList.contains('on')&&!document.hidden)toLoad()},60000);
+
 function locRow(v){const d=document.createElement('div');d.className='row';d.style.marginTop='6px';d.innerHTML='<input class="locin" placeholder="mis. Rak A-03 / Display Lt.1 Zona Granit"><button class="b fit" type="button" title="Hapus baris">×</button>';d.firstChild.value=v||'';d.firstChild.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();locRow().firstChild.focus()}};d.lastChild.onclick=()=>{d.remove();if(!document.querySelector('.locin'))locRow()};$('#locrows').appendChild(d);return d}
 function focusLoc(){const a=document.querySelectorAll('.locin');a[a.length-1].focus()}
 $('#addloc').onclick=()=>locRow().firstChild.focus();
@@ -423,7 +507,7 @@ $('#proc').onclick=async()=>{const m=$('#dmsg');try{const fw=$('#fw').files[0],f
  const seen=new Set(items.map(x=>x.c)),old=Object.fromEntries(DATA.items.map(x=>[x.c,x]));Object.keys(dc).forEach(c=>{if(!seen.has(c)&&cg[c]==='FLOORING AND WALL'&&Object.keys(dc[c]).length)items.push({c,b:bc[c]||'',n:nm[c]||'',m:(old[c]&&old[c].m)||'',s:'DC SAJA',x:1,t:0,d:dc[c],p:Object.entries(pn[c]||{}).map(([k,v])=>[k.split('|')[0],k.split('|').slice(1).join('|'),v])})});
  DATA={store,date:new Date().toLocaleDateString('id-ID'),items,stk,updatedAt:new Date().toISOString()};await api('stock',DATA);index();render();m.style.color='var(--ok)';m.textContent=`Selesai & dibagikan ke semua pengguna: ${items.length} item (termasuk item yang hanya ada di DC).`}catch(e){m.style.color='var(--er)';m.textContent='Gagal: '+e.message}};
 $('#rstb').onclick=async()=>{try{await api('stock',{reset:true});DATA=await (await fetch('/data/stock.json')).json();index();render();$('#dmsg').textContent='Kembali ke data bawaan.'}catch(e){$('#dmsg').textContent='Gagal: '+e.message}};
-show('dash');$('#kpi').onclick=e=>{const k=e.target.closest('[data-f]');if(k){filt=k.dataset.f;LIM=200;render();$('#chips').scrollIntoView({block:'nearest'})}};$('#refresh').onclick=()=>{loadStock();loadSamples()};loadStock();loadSamples();setInterval(loadSamples,60000);setInterval(loadStock,300000);document.addEventListener('visibilitychange',()=>{if(!document.hidden){loadSamples();loadStock()}});
+show('dash');toHash();$('#kpi').onclick=e=>{const k=e.target.closest('[data-f]');if(k){filt=k.dataset.f;LIM=200;render();$('#chips').scrollIntoView({block:'nearest'})}};$('#refresh').onclick=()=>{loadStock();loadSamples()};loadStock();loadSamples();setInterval(loadSamples,60000);setInterval(loadStock,300000);document.addEventListener('visibilitychange',()=>{if(!document.hidden){loadSamples();loadStock()}});
 </script>
 <script src="/version.js"></script>
 <script src="/js/pako.min.js"></script>
