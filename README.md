@@ -16,7 +16,7 @@ sample-pajangan-netlify/
 │     ├─ stock.json             data stok awal (15 Okt 2026)
 │     └─ promo-data.txt         data promo bawaan
 └─ netlify/
-   ├─ functions/                API server: samples, stock, promotasks, promodata, promoprogress, promochanges
+   ├─ functions/                API server: samples, stock, promotasks, promodata, promoprogress, promochanges, takeouts, findings
    └─ lib/users.mjs             daftar akun promo (untuk cek login di server)
 ```
 
@@ -182,3 +182,35 @@ Catatan: perbandingan memakai data yang sedang dimuat di browser admin sebagai p
 Di bawah judul halaman tampil **nomor versi**, **tanggal pembaruan**, dan **waktu deploy terakhir**, serta tombol **Riwayat perubahan**.
 - Nomor versi, tanggal, dan catatan perubahan di `public/version.js` diisi oleh Claude pada setiap pembaruan, jadi tidak perlu diedit manual.
 - **Waktu deploy terakhir** dibuat otomatis oleh Netlify setiap deploy (lewat `scripts/stamp.mjs` yang dijalankan dari `netlify.toml`), tanpa campur tangan siapa pun.
+
+---
+
+## Menu Take Out (memilih dan mendelegasikan ke tim)
+
+Daftar otomatis "Take out" di Monitoring hanya kandidat. Menu **Take Out** dipakai untuk memutuskan item mana yang benar-benar di-take out dan membagikannya ke tim.
+
+1. **Kandidat Take Out**: sample yang stok tokonya habis atau di bawah 10 dan tidak ada production no DC 100 atau lebih. Saring per kategori atau status, centang yang akan di-take out, lalu klik **Tambahkan yang dicentang**. Bisa juga dari Monitoring lewat tombol **+ Take out** di baris item.
+2. **Daftar Take Out**: item yang sudah diputuskan. Isi **PIC** dan **status** (Belum, Proses, Selesai) per item, atau centang beberapa item lalu **Tugaskan yang dicentang**. Kolom *Kondisi sekarang* memperlihatkan status terkini, jadi terlihat bila stok ternyata sudah kembali.
+3. **Bagikan ke tim**:
+   - **Salin teks WhatsApp** / **Kirim via WhatsApp**: daftar dikelompokkan per PIC (hanya yang belum selesai), lengkap dengan lokasi sample dan link.
+   - **Salin link**: pilih PIC di filter lebih dulu agar link langsung menampilkan tugas PIC itu.
+   - **Excel**: sesuai filter yang dipilih.
+4. Centang **Hapus sample otomatis saat Selesai** bila item yang selesai di-take out harus langsung hilang dari data sample.
+
+Daftar tersimpan di server (`takeouts.mjs`) sehingga semua orang melihat data yang sama. Jika `EDIT_PIN` dipasang, PIN yang sama dengan input sample dipakai untuk mengubah daftar.
+
+---
+
+## Temuan POP tersimpan di server
+
+Daftar **Temuan POP** (di tab Promo) kini tersimpan di server (`findings.mjs`), tidak lagi di browser:
+- Penugasan ke akun staff **muncul di perangkat mana pun** saat login dengan akun yang ditugaskan. Staff hanya menerima temuan yang ditugaskan ke akunnya; admin melihat semuanya.
+- Status, catatan, dan **foto bukti** ikut tersimpan di server, jadi admin bisa melihat foto yang diunggah staff dari HP-nya. Staff tidak bisa mengubah temuan milik akun lain, dan tidak bisa menandai Sudah dipasang tanpa foto.
+- Data tersinkron otomatis tiap 1 menit dan saat login.
+
+**Membatalkan temuan sekaligus (admin):**
+- **Batalkan yang tampil**: menghapus semua temuan sesuai filter yang sedang dipilih.
+- **Batalkan SEMUA temuan**: menghapus seluruh temuan (dengan dua kali konfirmasi). Foto bukti dan tugas di akun staff ikut hilang.
+- **Hapus yang sudah dipasang** tetap ada untuk membersihkan temuan yang selesai.
+
+**Temuan lama di perangkat admin:** bila sebelumnya ada temuan yang tersimpan di browser, muncul tombol **Impor temuan lama** di daftar temuan admin. Klik sekali untuk memindahkan temuan dan fotonya ke server.
